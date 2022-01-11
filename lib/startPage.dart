@@ -27,7 +27,13 @@ class startPage extends StatelessWidget{
                         //onPrimary: Colors.white,
 
                       ),
-                      child: const Text('시작하기')),
+                      child: const Text('시작하기',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                  ),
                 ],
               )
 
