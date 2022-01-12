@@ -28,6 +28,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   flutter_native_splash: ^1.3.3
+  animations: ^2.0.2
 
   flutter:
     sdk: flutter
