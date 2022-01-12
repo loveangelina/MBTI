@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mbti/CategorySelectPage.dart';
 import 'package:mbti/mbtiSelectPage.dart';
@@ -29,20 +30,6 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
-  final int _numDots = 3;
-  late final TabController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TabController(length: _numDots, vsync: this);
-  }
-
-  void _incrementCounter() {
-    setState(() {
-      (_controller.index == _numDots - 1) ? _controller.index = 0 : _controller.index++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,14 +49,45 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
             SizedBox(height: 20),
             inputfield(),
             SizedBox(height: 20),
-            Container(
-              child: TabPageSelector(controller: _controller, selectedColor: Colors.black,),
-              alignment: Alignment.center,
-            ),
+            progressCircle(),
             nextButtonArea(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget progressCircle(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          height: 13,
+          width: 13,
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.black
+          ),
+        ),
+        SizedBox(width: 3,),
+        Container(
+          height: 13,
+          width: 13,
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+            border: Border.all(color: Colors.black)
+          ),
+        ),
+        SizedBox(width: 3,),
+        Container(
+          height: 13,
+          width: 13,
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.black)
+          ),
+        ),
+      ],
     );
   }
   Widget profileImage(){

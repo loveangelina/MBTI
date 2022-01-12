@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'ChatPage.dart';
-import 'FavoritePage.dart';
 import 'MyPage.dart';
 import 'heart.dart';
 import 'model/article.dart';
+import 'heart.dart';
+import 'alarm.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -79,7 +80,7 @@ class HomeTab extends StatelessWidget{
         elevation: 0,
         // AppBar 그림자 제거
         iconTheme: const IconThemeData(
-        color: Colors.black,
+          color: Colors.black,
         ),
         title: Row(
           children: [
@@ -100,7 +101,14 @@ class HomeTab extends StatelessWidget{
               padding: EdgeInsets.only(right: 20.0),
               child: Icon(Icons.search),
             ),
-            const Icon(Icons.notification_important)
+            IconButton(
+                onPressed: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const alarmTab()),
+                  );
+                },
+                icon: const Icon(Icons.notification_important)),
           ],
         ),
         centerTitle: true,
@@ -168,7 +176,7 @@ class HomeTab extends StatelessWidget{
                           ],
                         ),
                         Text(
-                          '제목' + index.toString(),
+                          article.post[index].toString() + index.toString(),
                           style: TextStyle(
                           fontSize: 18,
                           color: Colors.black54

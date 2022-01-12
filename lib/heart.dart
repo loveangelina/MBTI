@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'ChatPage.dart';
 import 'FavoritePage.dart';
 import 'MyPage.dart';
@@ -229,5 +230,3 @@ class heartTab extends StatelessWidget {
     );
   }
 }
-
-
