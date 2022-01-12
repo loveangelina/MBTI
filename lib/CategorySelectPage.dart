@@ -53,6 +53,7 @@ class CategorySelectPage extends StatelessWidget{
               ],
             ),
             SizedBox(height: 20,),
+            progressCircle(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -83,6 +84,39 @@ class CategorySelectPage extends StatelessWidget{
             )
           ]
       ),
+    );
+  }
+  Widget progressCircle(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          height: 13,
+          width: 13,
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.black)
+          ),
+        ),
+        SizedBox(width: 3,),
+        Container(
+          height: 13,
+          width: 13,
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.black)
+          ),
+        ),
+        SizedBox(width: 3,),
+        Container(
+          height: 13,
+          width: 13,
+          decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.black
+          ),
+        ),
+      ],
     );
   }
 
