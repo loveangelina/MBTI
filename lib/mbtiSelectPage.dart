@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'homePage.dart';
+import 'CategorySelectPage.dart';
 
 class mbtiSelectPage extends StatelessWidget{
   @override
@@ -72,7 +72,7 @@ class mbtiSelectPage extends StatelessWidget{
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => HomePage()
+                            builder: (context) => CategorySelectPage()
                         )
                     );
                   },

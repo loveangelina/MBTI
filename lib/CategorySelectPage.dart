@@ -1,195 +1,104 @@
 import 'package:flutter/material.dart';
 
-class CategorySelect extends StatefulWidget {
-  const CategorySelect({Key? key}) : super(key: key);
+import 'homePage.dart';
 
-  @override
-  _CategorySelectState createState() => _CategorySelectState();
-}
-
-class _CategorySelectState extends State<CategorySelect> {
+class CategorySelectPage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        title: Text('관심 카테고리 설정'),
+        backgroundColor: const Color(0xffffffff),
+        elevation: 0, // AppBar 그림자 제거
+        iconTheme: const IconThemeData(
+          color: Colors.black,
+        ),
       ),
       body: Column(
-        children: [
-          SizedBox(height: 25,),
-          Text('관심분야는 무엇인가요?'),
-          SizedBox(height: 20, width: MediaQuery.of(context).size.width,),
-          Container(
-            width: 330,
-            child: Text('관심분야를 최대 5개 선택하고, 원하는 분야의 게시글을 우선으로 볼 수 있어요',),
-          ),
-          CategorySelectArea(),
-        ],
-      )
+        //mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            SizedBox(height: 50,),
+            Text("관심분야는 무엇인가요?", style: TextStyle(decorationThickness: 2),),
+            SizedBox(height: 20,),
+            Text("관심분야를 선택하고, 원하는 분야의 게시글을 우선으로 볼 수 있어요"),
+            SizedBox(height: 20,),
+            Column(
+              //mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(child: CategoryButton(text: '연애',), height: 130, width: 130,),
+                    Container(child: CategoryButton(text: '운동',), height: 130, width: 130,),
+                    Container(child: CategoryButton(text: '게임',), height: 130, width: 130,),
+                  ],
+                ),
+                SizedBox(height: 6,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(child: CategoryButton(text: '공부',), height: 130, width: 130,),
+                    Container(child: CategoryButton(text: '맛집',), height: 130, width: 130,),
+                    Container(child: CategoryButton(text: '학교생활',), height: 130, width: 130,),
+                  ],
+                ),
+                SizedBox(height: 6,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(child: CategoryButton(text: '알바',), height: 130, width: 130,),
+                    Container(child: CategoryButton(text: '대인관계',), height: 130, width: 130,),
+                    Container(child: CategoryButton(text: '연예',), height: 130, width: 130,),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 20,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text("MBTI를 모르겠어요"),
+                Text("MBTI 검사 바로가기"),
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomePage()
+                          )
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.black,
+                      //onPrimary: Colors.white,
+
+                    ),
+                    child: const Text('다음 단계',
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                ),
+              ],
+            )
+          ]
+      ),
     );
   }
 
-  Widget CategorySelectArea() {
-    return Stack(
-      children: [
-        Container(
-          height: 550,
-          width: MediaQuery.of(context).size.width,
-        ),
-        Positioned(
-          child: StackedButton(bigText: '1', smallText1: '1', smallText2: '2', smallText3: '3'),
-          left: 15,
-          top: 20,
-        ),
-        Positioned(
-          child: StackedButton(bigText: '2', smallText1: '1', smallText2: '2', smallText3: '3'),
-          left: 140,
-          top: 50,
-        ),
-        Positioned(
-          child: StackedButton(bigText: '3', smallText1: '1', smallText2: '2', smallText3: '3'),
-          left: 270,
-          top: 70,
-        ),
-        Positioned(
-          child: StackedButton(bigText: '4', smallText1: '1', smallText2: '2', smallText3: '3'),
-          left: 60,
-          top: 160,
-        ),
-        Positioned(
-          child: StackedButton(bigText: '5', smallText1: '1', smallText2: '2', smallText3: '3'),
-          left: 200,
-          top: 200,
-        ),
-        Positioned(
-          child: StackedButton(bigText: '6', smallText1: '1', smallText2: '2', smallText3: '3'),
-          left: 60,
-          top: 290,
-        ),
-        Positioned(
-          child: StackedButton(bigText: '7', smallText1: '1', smallText2: '2', smallText3: '3'),
-          left: 220,
-          top: 340,
-        ),
-        Positioned(
-          child: StackedButton(bigText: '8', smallText1: '1', smallText2: '2', smallText3: '3'),
-          left: 100,
-          top: 420,
-        ),
-      ],
-
-    );
-  }
-/*
-Widget StackedButton(bigText, smallText1, smallText2, smallText3){
-  bool _bigButtonVisible = true;
-  bool _smallButtonVisible = true;
-
-  void bigButtonClicked(){
-    setState(() {
-      _bigButtonVisible = false;
-      _smallButtonVisible = true;
-    });
-  }
-  return Stack(
-    children: [
-      Container(
-        child: Visibility(
-          child: RawMaterialButton(
-            onPressed: (){
-              bigButtonClicked();
-            },
-            child: Text(bigText, textScaleFactor: 2),
-            shape: CircleBorder(),
-            fillColor: Colors.deepPurple,
-          ),
-          visible: _bigButtonVisible,
-        ),
-        height: 120,
-        width: 120,
-      ),
-
-      Positioned(
-        child: Container(
-          child: Visibility(
-            child: RawMaterialButton(
-              onPressed: (){
-                print('clicked');
-              },
-              child: Text(smallText1),
-              shape: CircleBorder(),
-              fillColor: Colors.blue,
-            ),
-            visible: _smallButtonVisible,
-          ),
-          height: 55,
-        ),
-        left: 17,
-      ),
-
-      Positioned(
-        child: Container(
-          child: Visibility(
-            child: RawMaterialButton(
-              onPressed: (){
-                print('clicked');
-              },
-              child: Text(smallText2),
-              shape: CircleBorder(),
-              fillColor: Colors.blue,
-            ),
-            visible: _smallButtonVisible,
-          ),
-          height: 55,
-        ),
-        left: -10,
-        top: 50,
-      ),
-
-      Positioned(
-        child: Container(
-          child: Visibility(
-            child: RawMaterialButton(
-              onPressed: (){
-                print('clicked');
-              },
-              child: Text(smallText3),
-              shape: CircleBorder(),
-              fillColor: Colors.blue,
-            ),
-            visible: _smallButtonVisible,
-          ),
-          height: 55,
-        ),
-        left: 45,
-        top: 50,
-      ),
-    ],
-  );
-}
-*/
 }
 
-class StackedButton extends StatefulWidget {
-  final dynamic bigText;
-  final dynamic smallText1;
-  final dynamic smallText2;
-  final dynamic smallText3;
-
-  const StackedButton({Key? key, this.bigText, this.smallText1, this.smallText2, this.smallText3}) : super(key: key);
+class CategoryButton extends StatefulWidget {
+  final dynamic text;
+  const CategoryButton({Key? key, this.text}) : super(key: key);
 
   @override
-  _StackedButtonState createState() => _StackedButtonState();
+  _CategoryButtonState createState() => _CategoryButtonState();
 }
 
-class _StackedButtonState extends State<StackedButton> {
+class _CategoryButtonState extends State<CategoryButton> {
   bool _bigButtonVisible = true;
   bool _smallButtonVisible = false;
-  Color button1Color = Colors.grey;
-  Color button2Color = Colors.grey;
-  Color button3Color = Colors.grey;
   bool button1Selected = false;
   bool button2Selected = false;
   bool button3Selected = false;
@@ -201,91 +110,123 @@ class _StackedButtonState extends State<StackedButton> {
     });
   }
 
+  void smallButton1Clicked(){
+    setState(() {
+      button1Selected = !button1Selected;
+    });
+  }
+
+  void smallButton2Clicked(){
+    setState(() {
+      button2Selected = !button2Selected;
+    });
+  }
+
+  void smallButton3Clicked(){
+    setState(() {
+      button3Selected = !button3Selected;
+    });
+  }
+
+  void smallButton4Clicked(){
+    setState(() {
+      _bigButtonVisible = true;
+      _smallButtonVisible = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
-          child: Visibility(
+        Visibility(
+          child: Container(
+            height: 130,
+            width: 130,
             child: RawMaterialButton(
               onPressed: (){
                 bigButtonClicked();
               },
-              child: Text(widget.bigText, textScaleFactor: 2, style: TextStyle(color: Colors.white),),
-              shape: CircleBorder(),
-              fillColor: Color.fromARGB(255, 27, 7, 54),
+              child: Text(widget.text, textScaleFactor: 2, style: TextStyle(color: Colors.white),),
+              shape: RoundedRectangleBorder(),
+              fillColor: Colors.black45,
             ),
-            visible: _bigButtonVisible,
           ),
-          height: 120,
-          width: 120,
+          visible: _bigButtonVisible,
         ),
-
-        Positioned(
-          child: Container(
-            child: Visibility(
+        Visibility(
+          child: Positioned(
+            child: Container(
+              height: 130/2,
+              width: 130/2,
               child: RawMaterialButton(
                 onPressed: (){
-                  setState(() {
-                    button1Selected = !button1Selected;
-                  });
+                  smallButton1Clicked();
                 },
-                child: Text(widget.smallText1),
-                shape: CircleBorder(),
-                fillColor: button1Selected? Colors.deepOrangeAccent : Colors.grey,
+                child: Text('test', style: TextStyle(color: Colors.white),),
+                shape: RoundedRectangleBorder(),
+                fillColor: button1Selected? Colors.pinkAccent : Colors.purple,
               ),
-              visible: _smallButtonVisible,
             ),
-            height: 55,
           ),
-          top: -15,
-          left: 17,
+          visible: _smallButtonVisible,
         ),
-
-        Positioned(
-          child: Container(
-            child: Visibility(
+        Visibility(
+          child: Positioned(
+            child: Container(
+              height: 130/2,
+              width: 130/2,
               child: RawMaterialButton(
                 onPressed: (){
-                  setState(() {
-                    button2Selected = !button2Selected;
-                  });
+                  smallButton2Clicked();
                 },
-                child: Text(widget.smallText2),
-                shape: CircleBorder(),
-                fillColor: button2Selected? Colors.deepOrangeAccent : Colors.grey,
+                child: Text('test', style: TextStyle(color: Colors.white),),
+                shape: RoundedRectangleBorder(),
+                fillColor: button2Selected? Colors.pinkAccent : Colors.purple,
               ),
-              visible: _smallButtonVisible,
             ),
-            height: 55,
+            left: 65,
           ),
-          left: -15,
-          top: 50,
+          visible: _smallButtonVisible,
         ),
-
-        Positioned(
-          child: Container(
-            child: Visibility(
+        Visibility(
+          child: Positioned(
+            child: Container(
+              height: 130/2,
+              width: 130/2,
               child: RawMaterialButton(
                 onPressed: (){
-                  setState(() {
-                    button3Selected = !button3Selected;
-                  });
+                  smallButton3Clicked();
                 },
-                child: Text(widget.smallText3),
-                shape: CircleBorder(),
-                fillColor: button3Selected? Colors.deepOrangeAccent : Colors.grey,
+                child: Text('test', style: TextStyle(color: Colors.white),),
+                shape: RoundedRectangleBorder(),
+                fillColor: button3Selected? Colors.pinkAccent : Colors.purple,
               ),
-              visible: _smallButtonVisible,
             ),
-            height: 55,
+            top: 65,
           ),
-          left: 55,
-          top: 50,
+          visible: _smallButtonVisible,
         ),
-      ],
-      overflow: Overflow.visible,
+        Visibility(
+          child: Positioned(
+            child: Container(
+              height: 130/2,
+              width: 130/2,
+              child: RawMaterialButton(
+                onPressed: (){
+                  smallButton4Clicked();
+                },
+                child: Icon(Icons.arrow_back_outlined),
+                shape: RoundedRectangleBorder(),
+                fillColor: Colors.grey,
+              ),
+            ),
+            left: 65,
+            top: 65,
+          ),
+          visible: _smallButtonVisible,
+        ),
+      ]
     );
   }
 }
-
