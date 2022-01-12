@@ -75,7 +75,7 @@ class heartTab extends StatelessWidget {
                   Card(
                     child: ListTile(
                       leading:
-                      const CircleAvatar(
+                      const CircleAvatar(//이미지 수정 필요
                         backgroundImage: AssetImage('image/logo.png'),
                         radius:25,
                       ),

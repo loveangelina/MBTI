@@ -71,7 +71,7 @@ class _alarmTabState extends State<alarmTab> {
                           child: Row(
                             children:[
                               Container(
-                                child: const CircleAvatar(
+                                child: const CircleAvatar(//이미지 수정 필요
                                   backgroundImage: AssetImage('image/logo.png'),
                                   radius:28,
                                 ),

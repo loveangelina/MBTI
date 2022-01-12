@@ -19,8 +19,7 @@ class startPage extends StatelessWidget{
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              ////////////수정해야함 mbtiSelectPage()
-                                builder: (context) => heartTab()
+                                builder: (context) => mbtiSelectPage()
                             )
                         );
                       },
