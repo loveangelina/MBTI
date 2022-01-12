@@ -3,7 +3,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter/services.dart';
 import 'startPage.dart';
 
-//mbti..!
+
 void main() {
   runApp(const MyApp());
 }

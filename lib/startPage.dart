@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'mbtiSelectPage.dart';
-
+import 'heart.dart';
+import 'alarm.dart';
 class startPage extends StatelessWidget{
   @override
   Widget build(BuildContext context)
@@ -18,7 +19,8 @@ class startPage extends StatelessWidget{
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => mbtiSelectPage()
+                              ////////////수정해야함 mbtiSelectPage()
+                                builder: (context) => heartTab()
                             )
                         );
                       },
