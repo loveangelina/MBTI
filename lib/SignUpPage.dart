@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mbti/CategorySelectPage.dart';
 import 'package:mbti/mbtiSelectPage.dart';
 
 import 'package:mbti/utils/ProfileImageWidget.dart';

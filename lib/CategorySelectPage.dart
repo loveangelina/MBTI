@@ -13,13 +13,13 @@ class CategorySelectPage extends StatelessWidget{
           color: Colors.black,
         ),
       ),
-      body: Column(
+      body: ListView(
         //mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             SizedBox(height: 50,),
-            Text("관심분야는 무엇인가요?", style: TextStyle(decorationThickness: 2),),
+            Text("관심분야는 무엇인가요?", style: TextStyle(decorationThickness: 2), textAlign: TextAlign.center,),
             SizedBox(height: 20,),
-            Text("관심분야를 선택하고, 원하는 분야의 게시글을 우선으로 볼 수 있어요"),
+            Text("관심분야를 선택하고, 원하는 분야의 게시글을 우선으로 볼 수 있어요", textAlign: TextAlign.center),
             SizedBox(height: 20,),
             Column(
               //mainAxisAlignment: MainAxisAlignment.spaceAround,

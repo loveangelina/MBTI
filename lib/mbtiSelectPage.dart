@@ -14,13 +14,13 @@ class mbtiSelectPage extends StatelessWidget{
           color: Colors.black,
         ),
       ),
-      body: Column(
+      body: ListView(
         //mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           SizedBox(height: 50,),
-          Text("당신의 MBTI는 무엇인가요?", style: TextStyle(decorationThickness: 2),),
+          Text("당신의 MBTI는 무엇인가요?", style: TextStyle(decorationThickness: 2), textAlign: TextAlign.center),
           SizedBox(height: 20,),
-          Text("자신의 성격유형을 선택하고 나와 맞는 사람들을 찾아보세요"),
+          Text("자신의 성격유형을 선택하고 나와 맞는 사람들을 찾아보세요", textAlign: TextAlign.center),
           SizedBox(height: 20,),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

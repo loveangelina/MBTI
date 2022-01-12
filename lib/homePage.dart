@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'ChatPage.dart';
 import 'MyPage.dart';
+import 'heart.dart';
 import 'model/article.dart';
 import 'heart.dart';
 import 'alarm.dart';
@@ -14,7 +15,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  var _tabScreens = [HomeTab(), ChatPage(), heartTab(), MyPage()];
+  var _tabScreens = [HomeTab(), ChatPage(), heartPage(), MyPage()];
 
   void _onItemTapped(int index) {
     setState(() {
