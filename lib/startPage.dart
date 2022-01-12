@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'SignInPage.dart';
 import 'SignUpPage.dart';
 import 'mbtiSelectPage.dart';
 import 'heart.dart';
@@ -15,26 +17,39 @@ class startPage extends StatelessWidget{
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset('image/startPage.png'),
-                  ElevatedButton(
-                      onPressed: () {
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('아직 회원이 아니신가요?  '),
+                      TextButton(onPressed: (){
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => SignUp()
                             )
                         );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.black,
-                        //onPrimary: Colors.white,
-
+                      }, child: Text('회원가입    ')),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SignIn()
+                                )
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.black,
+                            //onPrimary: Colors.white,
+                          ),
+                          child: const Text('시작하기',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
                       ),
-                      child: const Text('시작하기',
-                        style: TextStyle(
-                          fontFamily: 'Roboto',
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
+                    ],
                   ),
                 ],
               )
