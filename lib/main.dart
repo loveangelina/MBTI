@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'startPage.dart';
 
+// firebase initialization
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  // app 실행 전에 firebase initialization
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -16,16 +24,12 @@ class MyApp extends StatelessWidget {
       title: 'Start page',
       home: startPage(),
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xffffffff),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            //primary: Colors.white,
+          scaffoldBackgroundColor: const Color(0xffffffff),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                  //primary: Colors.white,
 
-          )
-        )
-      ),
+                  ))),
     );
   }
 }
-
-
