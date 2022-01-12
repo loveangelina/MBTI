@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mbti/CategorySelectPage.dart';
+import 'package:mbti/mbtiSelectPage.dart';
 
 void main() {
-  runApp(const SignUp());
+  runApp(const Start());
 }
 
 class Start extends StatelessWidget {
@@ -165,7 +166,7 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => CategorySelect()),
+              MaterialPageRoute(builder: (context) => mbtiSelectPage()),
             );
           },
           style: ElevatedButton.styleFrom(
