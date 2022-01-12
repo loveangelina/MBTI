@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'SignUpPage.dart';
 import 'mbtiSelectPage.dart';
 
 class startPage extends StatelessWidget{
@@ -18,7 +19,7 @@ class startPage extends StatelessWidget{
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => mbtiSelectPage()
+                                builder: (context) => SignUp()
                             )
                         );
                       },
