@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'SignUpPage.dart';
 import 'mbtiSelectPage.dart';
 import 'heart.dart';
 import 'alarm.dart';
@@ -19,7 +20,7 @@ class startPage extends StatelessWidget{
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => mbtiSelectPage()
+                                builder: (context) => SignUp()
                             )
                         );
                       },
@@ -28,7 +29,13 @@ class startPage extends StatelessWidget{
                         //onPrimary: Colors.white,
 
                       ),
-                      child: const Text('시작하기')),
+                      child: const Text('시작하기',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                  ),
                 ],
               )
 
