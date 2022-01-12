@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'homePage.dart';
+import 'CategorySelectPage.dart';
 
 class mbtiSelectPage extends StatelessWidget{
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text('MBTI 선택', style: TextStyle(color: Colors.black),),
         backgroundColor: const Color(0xffffffff),
         elevation: 0, // AppBar 그림자 제거
         iconTheme: const IconThemeData(
@@ -62,6 +64,7 @@ class mbtiSelectPage extends StatelessWidget{
             ],
           ),
           SizedBox(height: 20,),
+          progressCircle(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -72,7 +75,7 @@ class mbtiSelectPage extends StatelessWidget{
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => HomePage()
+                            builder: (context) => CategorySelectPage()
                         )
                     );
                   },
@@ -92,6 +95,39 @@ class mbtiSelectPage extends StatelessWidget{
           )
         ]
       ),
+    );
+  }
+  Widget progressCircle(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          height: 13,
+          width: 13,
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.black)
+          ),
+        ),
+        SizedBox(width: 3,),
+        Container(
+          height: 13,
+          width: 13,
+          decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.black
+          ),
+        ),
+        SizedBox(width: 3,),
+        Container(
+          height: 13,
+          width: 13,
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.black)
+          ),
+        ),
+      ],
     );
   }
 
