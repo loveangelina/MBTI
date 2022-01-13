@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mbti/mbtiSelectPage.dart';
-
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 /*
 * SignUpPage
@@ -40,7 +44,8 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
   final TextEditingController confirmPwController = TextEditingController();
   final TextEditingController nickNameController = TextEditingController();
   String Nickname = '닉네임';
-  // Create new Firebase Auth instance
+  var profileImg = Image.asset('image/logo.png');
+  var image;
   FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
@@ -151,6 +156,14 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
                         );
                         await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.email).update({'Nickname': Nickname});
                         print(userCredential.user?.email.toString());
+
+
+                        //프로필이미지 업로드
+                        FirebaseStorage storage = FirebaseStorage.instance;
+                        Reference ref = storage.ref().child('profileImage').child(idController.text);
+                        UploadTask uploadTask = ref.putFile(File(image.path));
+                        uploadTask.then((p0) => p0.ref.getDownloadURL());
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => mbtiSelectPage()),
@@ -276,21 +289,27 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
             Container(
               height: 200,
               width: 200,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: NetworkImage(
-                        'https://cdn.pixabay.com/photo/2016/11/14/09/14/cat-1822979_1280.jpg'
-                    ),
+                    image: profileImg.image,
                   )
               ),
               margin: EdgeInsets.all(20),
             ),
             Positioned(
-              child: Icon(
-                Icons.photo_camera,
-                size: 40,
+              child: IconButton(
+                icon: Icon(
+                  Icons.photo_camera,
+                  size: 40,
+                ),
+                onPressed: () async {
+                  image = await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+                  setState(() {
+                    profileImg = Image.file(File(image!.path));
+                  });
+                },
               ),
               top: 190,
               left: 160,
@@ -304,7 +323,6 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
             Text(Nickname, textScaleFactor: 1.3,),
             IconButton(
               icon: Icon(Icons.create), onPressed: () {
-              print('fuck');
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
