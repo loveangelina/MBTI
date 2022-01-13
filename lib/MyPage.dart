@@ -72,8 +72,8 @@ class _MyPageWidgetState extends State<MyPageWidget> {
     return (Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
-          title: Center(
-            child: const Text(
+          title: const Center(
+            child: Text(
               '마이 페이지',
               style: TextStyle(
                 color: Colors.black,
