@@ -33,15 +33,16 @@ class _ArticlePageState extends State<ArticlePage> {
     );
   }
 
-  //위젯 게시글
+  //appbar
   PreferredSizeWidget appBarSection() {
     return AppBar(
       elevation: 0,
       centerTitle: true,
-      backgroundColor: Colors.blue,
+      backgroundColor: Colors.white,
       leading: IconButton(
         icon: const Icon(
           Icons.arrow_back,
+          color: Colors.black,
         ),
         onPressed: () {
           // Navigator.push(
@@ -63,7 +64,7 @@ class _ArticlePageState extends State<ArticlePage> {
     );
   }
 
-  //제목 및 작성자 표시
+  //title and poster section
   Widget titleSection() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -113,7 +114,7 @@ class _ArticlePageState extends State<ArticlePage> {
     );
   }
 
-  //내용
+  //content section
   Widget contentSection() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
@@ -126,7 +127,7 @@ class _ArticlePageState extends State<ArticlePage> {
     );
   }
 
-  //태그-태그 추가 필요
+  //tag section - required adding chip
   Widget tagSection() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -141,7 +142,7 @@ class _ArticlePageState extends State<ArticlePage> {
     );
   }
 
-  //좋아요 및 댓글 수
+  //like count and comment count
   Widget likeAndCommentSection() {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -178,12 +179,12 @@ class _ArticlePageState extends State<ArticlePage> {
     );
   }
 
-  //광고 자리
+  //advertisement section
   Widget advertisementSection() {
     return Container(
       width: 200,
       height: 100,
-      margin: EdgeInsets.only(bottom: 20),
+      margin: const EdgeInsets.only(bottom: 20),
       decoration: const BoxDecoration(
           shape: BoxShape.rectangle,
           image: DecorationImage(
@@ -195,51 +196,99 @@ class _ArticlePageState extends State<ArticlePage> {
     );
   }
 
-  //댓글 자리
+  //temp comment
   Widget commentSection() {
-    return Column(
+    return Row(
       children: [
-        Row(
-          children: [
-            Container(
-              margin: const EdgeInsets.only(right: 10),
-              child: const Icon(
-                Icons.account_circle_rounded,
-                size: 50,
-              ),
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('userName'),
-                  Container(
-                    margin: const EdgeInsets.only(top: 5),
-                    child: const Text(
-                      'content',
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
+        Container(
+          margin: const EdgeInsets.only(right: 10),
+          child: const Icon(
+            Icons.account_circle_rounded,
+            size: 50,
+          ),
+        ),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('userName'),
+              Container(
+                margin: const EdgeInsets.only(top: 5),
+                child: const Text(
+                  'content',
+                  style: TextStyle(
+                    color: Colors.grey,
                   ),
-                ],
+                ),
               ),
-            ),
-            IconButton(
-              icon: const Icon(
-                Icons.more_vert,
-              ),
-              onPressed: () {
+            ],
+          ),
+        ),
+        IconButton(
+          icon: const Icon(
+            Icons.more_vert,
+          ),
+          onPressed: () {
 
-              },
-            ),
-            const Divider(
-              color: Colors.black,
-              thickness: 1,
-            )
-          ],
+          },
+        ),
+        const Divider(
+          color: Colors.black,
+          thickness: 1,
         )
       ],
+    );
+  }
+
+  //generate comment v1
+  Widget generateComment(String content, String userName, String userImgURL) {
+    return Row(
+      children: [
+        Container(
+          margin: const EdgeInsets.only(right: 10),
+          child: const Icon(
+            Icons.account_circle_rounded,
+            size: 50,
+          ),
+        ),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(userName),
+              Container(
+                margin: const EdgeInsets.only(top: 5),
+                child: Text(
+                  content,
+                  style: const TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        IconButton(
+          icon: const Icon(
+            Icons.more_vert,
+          ),
+          onPressed: () {
+
+          },
+        ),
+        const Divider(
+          color: Colors.black,
+          thickness: 2,
+        )
+      ],
+    );
+  }
+
+  //generate chip v1
+  Widget generateChip(String chipName) {
+    return Chip(
+      label: Text(chipName),
+      backgroundColor: const Color(0xFFEAEAEA),
     );
   }
 }
