@@ -38,7 +38,8 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
   final TextEditingController idController = TextEditingController();
   final TextEditingController pwController = TextEditingController();
   final TextEditingController confirmPwController = TextEditingController();
-
+  final TextEditingController nickNameController = TextEditingController();
+  String Nickname = '닉네임';
   // Create new Firebase Auth instance
   FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -142,10 +143,13 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
                             email: idController.text,
                             password: pwController.text
                         ).whenComplete(() => print('create user'));
+
                         // collection[users]
                         await FirebaseFirestore.instance.collection('users').doc(idController.text).set({
                           'id' : idController.text,
-                        });
+                        }
+                        );
+                        await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.email).update({'Nickname': Nickname});
                         print(userCredential.user?.email.toString());
                         Navigator.push(
                           context,
@@ -293,17 +297,47 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
             )
           ],
         ),
-        Stack(
+        Row(
+          mainAxisAlignment:  MainAxisAlignment.center,
           children: [
-            Text('닉네임', textScaleFactor: 1.3,),
-            Positioned(
-                left: 60,
-                child: Icon(
-                    Icons.create
-                )
+            SizedBox(width: 40,),
+            Text(Nickname, textScaleFactor: 1.3,),
+            IconButton(
+              icon: Icon(Icons.create), onPressed: () {
+              print('fuck');
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  // return object of type Dialog
+                  return AlertDialog(
+                    title: new Text("닉네임을 입력하세요"),
+                    content: TextField(
+                      controller: nickNameController,
+
+                    ),
+                    actions: <Widget>[
+                      new FlatButton(
+                        child: new Text("Ok"),
+                        onPressed: () {
+                          setState(() {
+                            Nickname = nickNameController.text;
+                          });
+                          Navigator.pop(context);
+                        },
+                      ),
+                      new FlatButton(
+                        child: new Text("Close"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
             )
           ],
-          overflow: Overflow.visible,
         ),
       ],
     );
@@ -359,12 +393,13 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
           child: Text('다음단계'),
           onPressed: () async {
             try {
-              print("당므 단계");
+              print("다음 단계");
               UserCredential userCredential = await FirebaseAuth.instance
                   .createUserWithEmailAndPassword(
                   email: idController.text,
                   password: pwController.text
               ).whenComplete(() => print('create user'));
+              print('Nickname');
 
               print(userCredential.user!.email);
 
