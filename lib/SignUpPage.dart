@@ -2,11 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mbti/mbtiSelectPage.dart';
 
-import 'package:mbti/utils/ProfileImageWidget.dart';
 
 // Firebase Auth
 import 'package:firebase_auth/firebase_auth.dart';
-
 class Start extends StatelessWidget {
   const Start({Key? key}) : super(key: key);
 
@@ -16,7 +14,7 @@ class Start extends StatelessWidget {
       title: 'SingUpPage',
       home: SignUp(),
       theme: ThemeData(
-        primaryColor: Colors.black
+          primaryColor: Colors.black
       ),
     );
   }
@@ -30,6 +28,21 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
+  final TextEditingController idController = TextEditingController();
+  final TextEditingController pwController = TextEditingController();
+
+  // Create new Firebase Auth instance
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+    idController.dispose();
+    pwController.dispose();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +58,89 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
           children: [
             SizedBox(height: 20),
             Text('개인정보를 입력하세요', textAlign: TextAlign.center, textScaleFactor: 1.2, ),
-            ProfileImageWidget(),
+            profileImage(),
             SizedBox(height: 20),
-            inputfield(),
+            Column(
+              children: [
+                Container(
+                  width: 350,
+                  child: TextField(
+                    controller: idController,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        labelText: 'Username'
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Container(
+                  width: 350,
+                  child: TextField(
+                    controller: pwController,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        labelText: 'Password'
+                    ),
+                    obscureText: true,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Container(
+                  width: 350,
+                  child: TextField(
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        labelText: 'Confirm Password'
+                    ),
+                    obscureText: true,
+                  ),
+                ),
+              ],
+            ),
             SizedBox(height: 20),
             progressCircle(),
-            nextButtonArea(),
+            ButtonBar(
+              children: [
+                ElevatedButton(
+                  child: Text('다음단계'),
+                  onPressed: () async {
+                    try {
+                      print("당므 단계");
+                      UserCredential userCredential = await FirebaseAuth.instance
+                          .createUserWithEmailAndPassword(
+                          email: idController.text,
+                          password: pwController.text
+                      ).whenComplete(() => print('create user'));
+
+                      print(userCredential.user!.email);
+
+                    } on FirebaseAuthException catch (e) {
+                      if (e.code == 'weak-password') {
+                        print('The password provided is too weak.');
+                      } else if (e.code == 'email-already-in-use') {
+                        print('The account already exists for that email.');
+                      }
+                    } catch (e) {
+                      print(e);
+                    }
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => mbtiSelectPage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black,
+                    onPrimary: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(32.0),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ],
         ),
       ),
@@ -65,17 +155,8 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
           height: 13,
           width: 13,
           decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.black
-          ),
-        ),
-        SizedBox(width: 3,),
-        Container(
-          height: 13,
-          width: 13,
-          decoration: BoxDecoration(
               shape: BoxShape.circle,
-            border: Border.all(color: Colors.black)
+              color: Colors.black
           ),
         ),
         SizedBox(width: 3,),
@@ -86,6 +167,59 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
               shape: BoxShape.circle,
               border: Border.all(color: Colors.black)
           ),
+        ),
+        SizedBox(width: 3,),
+        Container(
+          height: 13,
+          width: 13,
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.black)
+          ),
+        ),
+      ],
+    );
+  }
+  Widget profileImage(){
+    return Column(
+      children: [
+        Stack(
+          children: [
+            Container(
+              height: 200,
+              width: 200,
+              decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(
+                        'https://cdn.pixabay.com/photo/2016/11/14/09/14/cat-1822979_1280.jpg'
+                    ),
+                  )
+              ),
+              margin: EdgeInsets.all(20),
+            ),
+            Positioned(
+              child: Icon(
+                Icons.photo_camera,
+                size: 40,
+              ),
+              top: 190,
+              left: 160,
+            )
+          ],
+        ),
+        Stack(
+          children: [
+            Text('닉네임', textScaleFactor: 1.3,),
+            Positioned(
+                left: 60,
+                child: Icon(
+                    Icons.create
+                )
+            )
+          ],
+          overflow: Overflow.visible,
         ),
       ],
     );
@@ -108,6 +242,7 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
         Container(
           width: 350,
           child: TextField(
+            controller: idController,
             decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 filled: true,
@@ -120,6 +255,7 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
         Container(
           width: 350,
           child: TextField(
+            controller: pwController,
             decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 filled: true,
@@ -137,7 +273,26 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
       children: [
         ElevatedButton(
           child: Text('다음단계'),
-          onPressed: () {
+          onPressed: () async {
+            try {
+              print("당므 단계");
+              UserCredential userCredential = await FirebaseAuth.instance
+                  .createUserWithEmailAndPassword(
+                  email: idController.text,
+                  password: pwController.text
+              ).whenComplete(() => print('create user'));
+
+              print(userCredential.user!.email);
+
+            } on FirebaseAuthException catch (e) {
+              if (e.code == 'weak-password') {
+                print('The password provided is too weak.');
+              } else if (e.code == 'email-already-in-use') {
+                print('The account already exists for that email.');
+              }
+            } catch (e) {
+              print(e);
+            }
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => mbtiSelectPage()),
