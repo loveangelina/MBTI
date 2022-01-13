@@ -36,7 +36,7 @@ class _MyPageWidgetState extends State<MyPageWidget> {
   // 리스트에 각각의 위젯을 담아서 build 함수에서 뿌려주는 방식
   final List<Widget> _myPageEntries = [
     const ProfileImageWidget(),
-    const UserIdPwInputWidget(),
+    UserIdPwInputWidget(textControllerList: [],),
     UserDropDownWidget(
       items: ["ENFJ", "INFJ", "ISTP"],
       dropdownValue: "ENFJ",
