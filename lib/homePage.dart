@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  var _tabScreens = [HomeTab(), ChatPage(), heartPage(), MyPage()];
+  var _tabScreens = [HomeTab(), ChatPage(), heartTab(), MyPage()];
 
   void _onItemTapped(int index) {
     setState(() {
