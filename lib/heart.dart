@@ -103,8 +103,6 @@ class heartTab extends StatelessWidget {
               indicatorColor: Colors.black,
             ),
             automaticallyImplyLeading: true,
-            leading: IconButton(icon: const Icon(Icons.arrow_back),
-              onPressed: () {  },),
             title: const Text('관심'),
           ),
           body: TabBarView(

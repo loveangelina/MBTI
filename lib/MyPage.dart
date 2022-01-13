@@ -72,16 +72,14 @@ class _MyPageWidgetState extends State<MyPageWidget> {
     return (Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Colors.black,
+          title: Center(
+            child: const Text(
+              '마이 페이지',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            onPressed: () {},
-          ),
-          title: const Text(
-            '마이 페이지',
-            style: TextStyle(color: Colors.black),
           ),
         ),
         body: ListView.separated(
