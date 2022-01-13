@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'ChatPage.dart';
-import 'FavoritePage.dart';
 import 'MyPage.dart';
 import 'homePage.dart';
 import 'model/article.dart';
