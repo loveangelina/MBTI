@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'homePage.dart';
@@ -15,9 +16,14 @@ class ArticlePage extends StatefulWidget {
 class _ArticlePageState extends State<ArticlePage> {
 
   final auth = FirebaseAuth.instance.currentUser;
+  late String? currId;
+
   @override
   Widget build(BuildContext context) {
     final Article article = widget.article;
+    currId = FirebaseAuth.instance.currentUser?.email;
+    print(FirebaseAuth.instance.currentUser);
+    print(currId);
     return Scaffold(
       appBar: appBarSection(),
       body: ListView(
@@ -28,12 +34,23 @@ class _ArticlePageState extends State<ArticlePage> {
           tagSection(),
           likeAndCommentSection(),
           advertisementSection(),
-          // Container(
-          //   height: 200,
-          //   child: ListView.builder(
-          //       itemBuilder:
-          //   ),
-          // )
+          Container(
+            height: 200,
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance.collection('article').doc(article.aid).collection('comment').snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.data == null) {
+                  return Container();
+                }else {
+                  // print(snapshot.data!.docs);
+                  return ListView(
+                    children: List.generate(snapshot.data!.docs.length, (index) => generateComment(snapshot.data!.docs[index]))
+                  );
+                }
+              },
+            ),
+          ),
+          commentSection(),
         ],
       ),
     );
@@ -232,7 +249,7 @@ class _ArticlePageState extends State<ArticlePage> {
         ),
         IconButton(
           icon: const Icon(
-            Icons.more_vert,
+            Icons.chat_bubble,
           ),
           onPressed: () {
 
@@ -247,10 +264,22 @@ class _ArticlePageState extends State<ArticlePage> {
   }
 
 
+  Future<void> createChatroom(String commenterId) async{
+    String? currId = auth?.email;
+    String chatRoom = 'temp';
+    if (currId != null && commenterId != null)
+      chatRoom = currId+commenterId;
 
+    await FirebaseFirestore.instance.collection('chatRooms').doc(chatRoom).set({
+      'uid1' : commenterId,
+      'uid2' : currId,
+    });
+  }
 
   //generate comment v1
-  Widget generateComment(String content, String userName, String userImgURL) {
+  Widget generateComment(DocumentSnapshot data) {
+    ArticleComments articleComments = ArticleComments.fromDs(data);
+
     return Row(
       children: [
         Container(
@@ -264,11 +293,11 @@ class _ArticlePageState extends State<ArticlePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(userName),
+              Text(articleComments.userId),
               Container(
                 margin: const EdgeInsets.only(top: 5),
                 child: Text(
-                  content,
+                  articleComments.content,
                   style: const TextStyle(
                     color: Colors.grey,
                   ),
@@ -282,7 +311,17 @@ class _ArticlePageState extends State<ArticlePage> {
             Icons.more_vert,
           ),
           onPressed: () {
+            createChatroom(articleComments.userId);
 
+            String? currId = auth?.email;
+            String chatRoom = 'temp';
+            if (currId != null && articleComments.userId != null)
+              chatRoom = currId+articleComments.userId;
+
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => const ChatRoomPage(chatRoom)),
+            // );
           },
         ),
         const Divider(

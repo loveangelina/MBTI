@@ -8,9 +8,9 @@ class Article {
   List<String> topic;
   bool createChatOption;
   String createdTime;
-  List<ArticleComments> comments;
+  String aid;
 
-  Article({required this.createrId, required this.like, required this.mbti, required this.post, required this.topic, required this.createChatOption, required this.createdTime, required this.comments});
+  Article({required this.createrId, required this.like, required this.mbti, required this.post, required this.topic, required this.createChatOption, required this.createdTime, required this.aid});
 
   factory Article.fromDs(dynamic data) {
     return Article(
@@ -21,7 +21,7 @@ class Article {
       topic: data['topic'] ?? [],
       createChatOption: data['createChatOption'] ?? true,
       createdTime: data['createdTime'] ?? '',
-      comments: data['comments'] ?? [],
+      aid: data['aid'] ?? '',
     );
   }
 }
@@ -36,7 +36,7 @@ class ArticleComments {
   factory ArticleComments.fromDs(dynamic data) {
     return ArticleComments(
       content: data['content'] ?? '',
-      userId: data[''] ?? '',
+      userId: data['userId'] ?? '',
       time: data['time'] ?? '',
     );
   }

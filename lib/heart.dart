@@ -69,13 +69,13 @@ class _heartPageState extends State<heartPage> {
 
 class heartTab extends StatelessWidget {
   Article article = Article(
-      createrId: 'createrId',
-      like: 5, mbti: ['ENTP'],
-      post: {'content' : '본문', 'title' : '제목'},
-      topic: [],
-      createChatOption: true,
-      createdTime: '몰?루',
-      comments: [],
+    createrId: 'createrId',
+    like: 5, mbti: ['ENTP'],
+    post: {'content' : '본문', 'title' : '제목'},
+    topic: [],
+    createChatOption: true,
+    createdTime: '몰?루',
+    aid: '몰?루',
   );
 
   @override
@@ -168,22 +168,22 @@ class heartTab extends StatelessWidget {
                                       const SizedBox(width: 7),
                                       Row(
                                           crossAxisAlignment:CrossAxisAlignment.center,
-                                        children:[
-                                          Column(
-                                            mainAxisAlignment: MainAxisAlignment.center ,
-                                            children: [
-                                              Text(article.createrId),
-                                              Text('00분전'),
-                                            ],
-                                          ),
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.favorite,
-                                              color: Colors.pink,
-                                              size: 24.0,
-                                            ), onPressed: () {  },
-                                          ),
-                                        ]
+                                          children:[
+                                            Column(
+                                              mainAxisAlignment: MainAxisAlignment.center ,
+                                              children: [
+                                                Text(article.createrId),
+                                                Text('00분전'),
+                                              ],
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.favorite,
+                                                color: Colors.pink,
+                                                size: 24.0,
+                                              ), onPressed: () {  },
+                                            ),
+                                          ]
                                       )
                                     ]
                                 )

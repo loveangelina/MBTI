@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'ArticlePage.dart';
 import 'package:intl/intl.dart';
@@ -17,6 +18,8 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
   //TextField Controller
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
+
+  final String? uid = FirebaseAuth.instance.currentUser?.email;
 
   late Article article;
 
@@ -39,9 +42,11 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
   Map<String, String> post = {};
   List<String> topic = [];
   late String currTime;
+  late String aid;
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: appBarSection(),
       body: ListView(
@@ -101,15 +106,17 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
               post['title'] = titleController.text;
               post['content'] = contentController.text;
 
-              article = Article(
-                  createrId: '임시',
-                  like: 0, mbti: finalMBTI,
-                  post: post, topic: topic,
-                  createChatOption: option,
-                  createdTime: currTime,
-                  comments: []);
-
               uploadArticle();
+              generateCommentCollection(aid);
+
+              article = Article(
+                createrId: '임시',
+                like: 0, mbti: finalMBTI,
+                post: post, topic: topic,
+                createChatOption: option,
+                createdTime: currTime,
+                aid: aid,
+              );
 
               titleController.clear();
               contentController.clear();
@@ -128,7 +135,11 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
   }
 
   Future<void> uploadArticle() async{
-    await FirebaseFirestore.instance.collection('article').add({
+    DocumentReference documentReference = FirebaseFirestore.instance.collection('article').doc();
+    print(documentReference.id);
+    aid = documentReference.id;
+
+    await FirebaseFirestore.instance.collection('article').doc(documentReference.id).set({
       'createrId' : '임시',
       'like' : 0,
       'mbti' : finalMBTI,
@@ -136,8 +147,12 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
       'topic' : topic,
       'createChatOption' : option,
       'createdTime' : currTime,
-      'comments' : [],
+      'aid' : documentReference.id,
     });
+  }
+
+  Future<void> generateCommentCollection(String aid) async{
+    await FirebaseFirestore.instance.collection('article').doc(aid).collection('comment').add({});
   }
 
   //title section
@@ -225,17 +240,7 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
   Widget hashTagSection() {
     return Container(
       margin: const EdgeInsets.only(top: 20),
-      child: const Expanded(
-        child: TextField(
-          keyboardType: TextInputType.text,
-          textInputAction: TextInputAction.go,
-          decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding:
-              EdgeInsets.symmetric(horizontal: 15),
-              hintText: "Search..."),
-        ),
-      ),
+
     );
   }
 
@@ -333,7 +338,6 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
           selectedMBTI[index] = !selectedMBTI[index];
         });
       },
-    )
-    ;
+    );
   }
 }

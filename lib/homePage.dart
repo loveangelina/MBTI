@@ -79,39 +79,39 @@ class HomeTab extends StatelessWidget{
     topic: [],
     createChatOption: true,
     createdTime: '몰?루',
-    comments: [],
+    aid: '몰?루',
   );
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: () async {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              // return object of type Dialog
-              return AlertDialog(
-                title: new Text("알림"),
-                content: new Text("정말로 종료하실건가요?"),
-                actions: <Widget>[
-                  new FlatButton(
-                    child: new Text("종료"),
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => startPage()));
-                    },
-                  ),
-                  new FlatButton(
-                    child: new Text("취소"),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-              );
-            },
-          );
-          return false;
-        },
+      onWillPop: () async {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            // return object of type Dialog
+            return AlertDialog(
+              title: new Text("알림"),
+              content: new Text("정말로 종료하실건가요?"),
+              actions: <Widget>[
+                new FlatButton(
+                  child: new Text("종료"),
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => startPage()));
+                  },
+                ),
+                new FlatButton(
+                  child: new Text("취소"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        return false;
+      },
       child: Scaffold(
           appBar: AppBar(
             backgroundColor: const Color(0xffffffff),
@@ -299,5 +299,4 @@ class HomeTab extends StatelessWidget{
     );
   }
 }
-
 
