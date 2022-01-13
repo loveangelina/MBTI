@@ -8,16 +8,8 @@ class SignIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
     final _idFieldController = TextEditingController();
     final _pwFieldController = TextEditingController();
-
-    @override
-    void dispose(){
-      _idFieldController.dispose();
-      _pwFieldController.dispose();
-    }
 
     return Scaffold(
 
@@ -66,15 +58,46 @@ class SignIn extends StatelessWidget {
                           email: _idFieldController.text,
                           password: _pwFieldController.text,
                       );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomePage()),
-                      );
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
                     } on FirebaseAuthException catch (e) {
                       if (e.code == 'user-not-found') {
-                        print('No user found for that email.');
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            // return object of type Dialog
+                            return AlertDialog(
+                              title: new Text("인증오류"),
+                              content: new Text("아이디가 존재하지 않습니다."),
+                              actions: <Widget>[
+                                new FlatButton(
+                                  child: new Text("Close"),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       } else if (e.code == 'wrong-password') {
-                        print('Wrong password provided for that user.');
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            // return object of type Dialog
+                            return AlertDialog(
+                              title: new Text("인증오류"),
+                              content: new Text("비밀번호가 틀립니다."),
+                              actions: <Widget>[
+                                new FlatButton(
+                                  child: new Text("Close"),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       }
                     }
                     },
