@@ -6,6 +6,7 @@ import 'heart.dart';
 import 'model/article.dart';
 import 'alarm.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'createArticlePage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -71,7 +72,15 @@ class _HomePageState extends State<HomePage> {
 
 class HomeTab extends StatelessWidget{
   //Article article = Article.fromDs(data);
-  Article article = Article(createrId: 'createrId', like: 5, mbti: ['ENTP'], post: {'content' : '본문', 'title' : '제목'}, topic: []);
+  Article article = Article(
+    createrId: 'createrId',
+    like: 5, mbti: ['ENTP'],
+    post: {'content' : '본문', 'title' : '제목'},
+    topic: [],
+    createChatOption: true,
+    createdTime: '몰?루',
+    comments: [],
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -269,7 +278,12 @@ class HomeTab extends StatelessWidget{
                   foregroundColor: Colors.white,
                   label: '게시글 작성',
                   labelStyle: TextStyle(fontSize: 18.0),
-                  onTap: () => (){},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const CreateArticlePage()),
+                    );
+                  },
                 ),
                 SpeedDialChild(
                   child: Icon(Icons.alarm),
