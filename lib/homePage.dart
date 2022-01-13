@@ -5,6 +5,7 @@ import 'heart.dart';
 import 'model/article.dart';
 import 'heart.dart';
 import 'alarm.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -214,7 +215,44 @@ class HomeTab extends StatelessWidget{
             ),
           )
         ],
-      )
+      ),
+        floatingActionButton: SpeedDial(
+          marginBottom: 10,
+          icon: Icons.add,
+          activeIcon: Icons.close,
+          backgroundColor: Colors.black54,
+          foregroundColor: Colors.white,
+          activeBackgroundColor: Colors.white,
+          activeForegroundColor: Colors.black,
+          buttonSize: 56.0,
+          visible: true,
+          closeManually: false,
+          curve: Curves.bounceIn,
+          overlayColor: Colors.black,
+          overlayOpacity: 0.5,
+          onOpen:(){},
+          onClose:(){},
+          elevation: 8.0,
+          shape:CircleBorder(),
+          children: [
+            SpeedDialChild(
+              child: Icon(Icons.edit),
+              backgroundColor: Colors.black,
+              foregroundColor: Colors.white,
+              label: '게시글 작성',
+              labelStyle: TextStyle(fontSize: 18.0),
+              onTap: () => (){},
+            ),
+            SpeedDialChild(
+              child: Icon(Icons.alarm),
+              backgroundColor: Colors.black,
+              foregroundColor: Colors.white,
+              label: '키워드 알림 설정',
+              labelStyle: TextStyle(fontSize: 18.0),
+              onTap: () => (){},
+            ),
+          ]
+        )
     );
   }
 }
