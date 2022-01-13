@@ -1,17 +1,23 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-// import 'homePage.dart'
+import 'homePage.dart';
+
+import './model/article.dart';
 
 class ArticlePage extends StatefulWidget {
-  const ArticlePage({Key? key}) : super(key: key);
+  const ArticlePage({Key? key, required this.article}) : super(key: key);
 
+  final Article article;
   @override
   State<ArticlePage> createState() => _ArticlePageState();
 }
 
 class _ArticlePageState extends State<ArticlePage> {
 
+  final auth = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
+    final Article article = widget.article;
     return Scaffold(
       appBar: appBarSection(),
       body: ListView(
@@ -45,12 +51,12 @@ class _ArticlePageState extends State<ArticlePage> {
           color: Colors.black,
         ),
         onPressed: () {
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) => HomePage()
-          //     )
-          // );
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => HomePage()
+              )
+          );
         },
       ),
       title: const Text(
@@ -239,6 +245,9 @@ class _ArticlePageState extends State<ArticlePage> {
       ],
     );
   }
+
+
+
 
   //generate comment v1
   Widget generateComment(String content, String userName, String userImgURL) {
