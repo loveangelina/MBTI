@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mbti/startPage.dart';
 import 'ChatPage.dart';
 import 'MyPage.dart';
 import 'heart.dart';
 import 'model/article.dart';
-import 'heart.dart';
 import 'alarm.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
@@ -48,8 +46,8 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             icon: Padding(
-              padding: EdgeInsets.only(top: 10),
-              child: _selectedIndex == 2? Icon(Icons.favorite): Icon(Icons.favorite_border)
+                padding: EdgeInsets.only(top: 10),
+                child: _selectedIndex == 2? Icon(Icons.favorite): Icon(Icons.favorite_border)
             ),
             label: '',
           ),
@@ -76,35 +74,7 @@ class HomeTab extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            // return object of type Dialog
-            return AlertDialog(
-              title: new Text("알림"),
-              content: new Text("정말로 종료하시겠습니까?"),
-              actions: <Widget>[
-                new FlatButton(
-                  child: new Text("종료"),
-                  onPressed: () {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => startPage()));
-                  },
-                ),
-                new FlatButton(
-                  child: new Text("취소"),
-                  onPressed: () {
-                    Navigator.pop(context, false);
-                  },
-                ),
-              ],
-            );
-          },
-        );
-        return false;
-      },
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xffffffff),
           elevation: 0,
@@ -208,80 +178,79 @@ class HomeTab extends StatelessWidget{
                           Text(
                             article.post[index].toString() + index.toString(),
                             style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.black54
+                                fontSize: 18,
+                                color: Colors.black54
                             ),
                           ),
                           Padding(padding: EdgeInsets.only(bottom: 35)),
                           Container(
-                            height: 60,
-                            child: Row(
-                              children: [
-                                Container(
-                                  child: Image.network("https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg"),
-                                  width: 50,
-                                  height: 50,
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.only(right: 15),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start ,
+                              height: 60,
+                              child: Row(
                                   children: [
-                                    Text(article.createrId),
-                                    Text('00분전'),
-                                  ],
-                                )
-                              ]
-                            )
+                                    Container(
+                                      child: Image.network("https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg"),
+                                      width: 50,
+                                      height: 50,
+                                    ),
+                                    const Padding(
+                                      padding: EdgeInsets.only(right: 15),
+                                    ),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start ,
+                                      children: [
+                                        Text(article.createrId),
+                                        Text('00분전'),
+                                      ],
+                                    )
+                                  ]
+                              )
                           )
                         ],
                       ),
                     ),
-                  ),
-                );
-              },
-              itemCount: 10,
-            ),
-          )
-        ],
-      ),
+                  );
+                },
+                itemCount: 10,
+              ),
+            )
+          ],
+        ),
         floatingActionButton: SpeedDial(
-          marginBottom: 10,
-          icon: Icons.add,
-          activeIcon: Icons.close,
-          backgroundColor: Colors.black54,
-          foregroundColor: Colors.white,
-          activeBackgroundColor: Colors.white,
-          activeForegroundColor: Colors.black,
-          buttonSize: 56.0,
-          visible: true,
-          closeManually: false,
-          curve: Curves.bounceIn,
-          overlayColor: Colors.black,
-          overlayOpacity: 0.5,
-          onOpen:(){},
-          onClose:(){},
-          elevation: 8.0,
-          shape:CircleBorder(),
-          children: [
-            SpeedDialChild(
-              child: Icon(Icons.edit),
-              backgroundColor: Colors.black,
-              foregroundColor: Colors.white,
-              label: '게시글 작성',
-              labelStyle: TextStyle(fontSize: 18.0),
-              onTap: () => (){},
-            ),
-            SpeedDialChild(
-              child: Icon(Icons.alarm),
-              backgroundColor: Colors.black,
-              foregroundColor: Colors.white,
-              label: '키워드 알림 설정',
-              labelStyle: TextStyle(fontSize: 18.0),
-              onTap: () => (){},
-            ),
-          ]
+            marginBottom: 10,
+            icon: Icons.add,
+            activeIcon: Icons.close,
+            backgroundColor: Colors.black54,
+            foregroundColor: Colors.white,
+            activeBackgroundColor: Colors.white,
+            activeForegroundColor: Colors.black,
+            buttonSize: 56.0,
+            visible: true,
+            closeManually: false,
+            curve: Curves.bounceIn,
+            overlayColor: Colors.black,
+            overlayOpacity: 0.5,
+            onOpen:(){},
+            onClose:(){},
+            elevation: 8.0,
+            shape:CircleBorder(),
+            children: [
+              SpeedDialChild(
+                child: Icon(Icons.edit),
+                backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
+                label: '게시글 작성',
+                labelStyle: TextStyle(fontSize: 18.0),
+                onTap: () => (){},
+              ),
+              SpeedDialChild(
+                child: Icon(Icons.alarm),
+                backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
+                label: '키워드 알림 설정',
+                labelStyle: TextStyle(fontSize: 18.0),
+                onTap: () => (){},
+              ),
+            ]
         )
     );
   }

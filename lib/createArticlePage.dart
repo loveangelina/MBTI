@@ -28,6 +28,7 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
   bool isFilledContext = false;
 
   var MBTI = ['ENFJ', 'INFJ', 'ISTP', 'ESTP', 'ENFP', 'INFP', 'ESFP', 'ISFP', 'ESFJ', 'ISFJ', 'INTP', 'INTJ', 'ESTJ', 'ISTJ', 'ENTJ', 'ENTP'];
+  var selectedMBTI = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +51,13 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
   PreferredSizeWidget appBarSection() {
     return AppBar(
       elevation: 0,
+      leading: IconButton(
+        icon: const Icon(Icons.clear),
+        color: Colors.black,
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
       centerTitle: false,
       backgroundColor: Colors.white,
       title: const Text(
@@ -197,15 +205,94 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'MBTI 유형',
-            style: TextStyle(
-              color: Colors.grey,
+          Container(
+            margin: const EdgeInsets.only(bottom: 5),
+            child: const Text(
+              'MBTI 유형',
+              style: TextStyle(
+                color: Colors.grey,
+              ),
             ),
           ),
-
+          Container(
+            margin: const EdgeInsets.only(left: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  '유형 선택',
+                  style: TextStyle(
+                      color: Colors.grey
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.keyboard_arrow_right,
+                  ),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return StatefulBuilder(
+                            builder: (context, setState) {
+                              return AlertDialog(
+                                title: const Text('MBTI 선택(다중 선택 가능)'),
+                                content: Container(
+                                  height: 300,
+                                  width: 300,
+                                  child: GridView.count(
+                                    crossAxisCount: 4,
+                                    children: List.generate(
+                                        16, (index) => generateMBTI(index, setState)
+                                    ),
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text(
+                                      '완료',
+                                      style: TextStyle(
+                                          color: Colors.lightBlueAccent),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+          const Divider(
+            thickness: 2,
+            color: Colors.grey,
+          ),
         ],
       ),
     );
+  }
+
+  Widget generateMBTI(int index, StateSetter setState) {
+    return ElevatedButton(
+      child: Text(MBTI[index]),
+      style: ElevatedButton.styleFrom(
+        primary: selectedMBTI[index] ? Colors.black : Colors.grey,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(100),
+        ),
+      ),
+      onPressed: () {
+        setState(() {
+          selectedMBTI[index] = !selectedMBTI[index];
+        });
+      },
+    )
+    ;
   }
 }
