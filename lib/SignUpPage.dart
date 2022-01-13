@@ -1,7 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mbti/mbtiSelectPage.dart';
 
+
+/*
+* SignUpPage
+*   회원가입시 Authentication 에 user 추가
+*   Fire store database > users collection > user id document
+* */
 
 // Firebase Auth
 import 'package:firebase_auth/firebase_auth.dart';
@@ -108,14 +115,17 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
                   child: Text('다음단계'),
                   onPressed: () async {
                     try {
-                      print("당므 단계");
                       UserCredential userCredential = await FirebaseAuth.instance
                           .createUserWithEmailAndPassword(
                           email: idController.text,
                           password: pwController.text
                       ).whenComplete(() => print('create user'));
-
-                      print(userCredential.user!.email);
+                      // collection[users]
+                      await FirebaseFirestore.instance.collection('users').doc(idController.text).set({
+                        'id' : idController.text,
+                      });
+                      print(
+                          userCredential.user?.email.toString());
 
                     } on FirebaseAuthException catch (e) {
                       if (e.code == 'weak-password') {
