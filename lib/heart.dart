@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'ChatPage.dart';
 import 'MyPage.dart';
 import 'homePage.dart';
@@ -158,15 +157,25 @@ class heartTab extends StatelessWidget {
                                         width: 50,
                                         height: 50,
                                       ),
-                                      const Padding(
-                                        padding: EdgeInsets.only(right: 15),
-                                      ),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start ,
-                                        children: [
-                                          Text(article.createrId),
-                                          Text('00분전'),
-                                        ],
+                                      const SizedBox(width: 7),
+                                      Row(
+                                          crossAxisAlignment:CrossAxisAlignment.center,
+                                        children:[
+                                          Column(
+                                            mainAxisAlignment: MainAxisAlignment.center ,
+                                            children: [
+                                              Text(article.createrId),
+                                              Text('00분전'),
+                                            ],
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.favorite,
+                                              color: Colors.pink,
+                                              size: 24.0,
+                                            ), onPressed: () {  },
+                                          ),
+                                        ]
                                       )
                                     ]
                                 )
