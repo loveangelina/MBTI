@@ -159,10 +159,13 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
 
 
                         //프로필이미지 업로드
-                        FirebaseStorage storage = FirebaseStorage.instance;
-                        Reference ref = storage.ref().child('profileImage').child(idController.text);
-                        UploadTask uploadTask = ref.putFile(File(image.path));
-                        uploadTask.then((p0) => p0.ref.getDownloadURL());
+                        if(image != null){
+                          FirebaseStorage storage = FirebaseStorage.instance;
+                          Reference ref = storage.ref().child('profileImage').child(idController.text);
+                          UploadTask uploadTask = ref.putFile(File(image.path));
+                          uploadTask.then((p0) => p0.ref.getDownloadURL());
+                        }
+
 
                         Navigator.push(
                           context,
