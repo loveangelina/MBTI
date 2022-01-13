@@ -43,7 +43,6 @@ class _alarmTabState extends State<alarmTab> {
             automaticallyImplyLeading: true,
             leading: IconButton(icon: const Icon(Icons.arrow_back),
               onPressed: () {  },),
-            ),
             title: const Text('알림'),
             actions: [
               IconButton(
