@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'ChatPage.dart';
-import 'FavoritePage.dart';
 import 'MyPage.dart';
 import 'homePage.dart';
 import 'model/article.dart';
@@ -103,8 +102,6 @@ class heartTab extends StatelessWidget {
               indicatorColor: Colors.black,
             ),
             automaticallyImplyLeading: true,
-            leading: IconButton(icon: const Icon(Icons.arrow_back),
-              onPressed: () {  },),
             title: const Text('관심'),
           ),
           body: TabBarView(

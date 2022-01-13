@@ -3,7 +3,6 @@ import 'ChatPage.dart';
 import 'MyPage.dart';
 import 'heart.dart';
 import 'model/article.dart';
-import 'heart.dart';
 import 'alarm.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
