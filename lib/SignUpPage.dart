@@ -37,6 +37,7 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
   final TextEditingController idController = TextEditingController();
   final TextEditingController pwController = TextEditingController();
+  final TextEditingController confirmPwController = TextEditingController();
 
   // Create new Firebase Auth instance
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -50,6 +51,9 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
+  bool isCorrectPassword(){
+    return confirmPwController.text == pwController.text;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,8 +100,25 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
                 const SizedBox(height: 12),
                 Container(
                   width: 350,
-                  child: TextField(
+                  child: TextFormField(
+                    validator: (value) {
+                      if (confirmPwController.text != pwController.text) {
+                        return '비밀번호가 같지 않습니다';
+                      }
+                      return null;
+                    },
+                    onChanged: (text){
+                      setState(() {
+                        isCorrectPassword();
+                      });
+                    },
+                    controller: confirmPwController,
                     decoration: const InputDecoration(
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.red
+                        ),
+                      ),
                         border: OutlineInputBorder(),
                         filled: true,
                         labelText: 'Confirm Password'
@@ -114,32 +135,85 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
                 ElevatedButton(
                   child: Text('다음단계'),
                   onPressed: () async {
-                    try {
-                      UserCredential userCredential = await FirebaseAuth.instance
-                          .createUserWithEmailAndPassword(
-                          email: idController.text,
-                          password: pwController.text
-                      ).whenComplete(() => print('create user'));
-                      // collection[users]
-                      await FirebaseFirestore.instance.collection('users').doc(idController.text).set({
-                        'id' : idController.text,
-                      });
-                      print(
-                          userCredential.user?.email.toString());
-
-                    } on FirebaseAuthException catch (e) {
-                      if (e.code == 'weak-password') {
-                        print('The password provided is too weak.');
-                      } else if (e.code == 'email-already-in-use') {
-                        print('The account already exists for that email.');
+                    if(isCorrectPassword()){
+                      try {
+                        UserCredential userCredential = await FirebaseAuth.instance
+                            .createUserWithEmailAndPassword(
+                            email: idController.text,
+                            password: pwController.text
+                        ).whenComplete(() => print('create user'));
+                        // collection[users]
+                        await FirebaseFirestore.instance.collection('users').doc(idController.text).set({
+                          'id' : idController.text,
+                        });
+                        print(userCredential.user?.email.toString());
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => mbtiSelectPage()),
+                        );
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == 'weak-password') {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              // return object of type Dialog
+                              return AlertDialog(
+                                title: new Text("오류"),
+                                content: new Text("비밀번호가 너무 짧습니다."),
+                                actions: <Widget>[
+                                  new FlatButton(
+                                    child: new Text("Close"),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        } else if (e.code == 'email-already-in-use') {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              // return object of type Dialog
+                              return AlertDialog(
+                                title: new Text("오류"),
+                                content: new Text("아이디가 이미 존재합니다."),
+                                actions: <Widget>[
+                                  new FlatButton(
+                                    child: new Text("Close"),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      } catch (e) {
+                        print(e);
                       }
-                    } catch (e) {
-                      print(e);
                     }
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => mbtiSelectPage()),
+                    else{showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        // return object of type Dialog
+                        return AlertDialog(
+                          title: new Text("인증오류"),
+                          content: new Text("비밀번호가 다릅니다."),
+                          actions: <Widget>[
+                            new FlatButton(
+                              child: new Text("Close"),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ],
+                        );
+                      },
                     );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     primary: Colors.black,
