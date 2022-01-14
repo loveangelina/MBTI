@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mbti/mbtiSelectPage.dart';
@@ -7,11 +7,13 @@ import 'package:mbti/mbtiSelectPage.dart';
 /*
 * SignUpPage
 *   회원가입시 Authentication 에 user 추가
-*   Fire store database > users collection > user id document
+*   Fire store database > users collection >  user id document
 * */
 
 // Firebase Auth
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Start extends StatelessWidget {
   const Start({Key? key}) : super(key: key);
 
@@ -124,9 +126,9 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
                       await FirebaseFirestore.instance.collection('users').doc(idController.text).set({
                         'id' : idController.text,
                       });
-                      print(
-                          userCredential.user?.email.toString());
-
+                      // print(
+                      //     FirebaseAuth.instance.currentUser);
+                      // print(FirebaseAuth.instance.currentUser?.email);
                     } on FirebaseAuthException catch (e) {
                       if (e.code == 'weak-password') {
                         print('The password provided is too weak.');

@@ -72,6 +72,7 @@ class mbtiSelectPage extends StatelessWidget{
               Text("MBTI 검사 바로가기"),
               ElevatedButton(
                   onPressed: () {
+
                     Navigator.push(
                         context,
                         MaterialPageRoute(

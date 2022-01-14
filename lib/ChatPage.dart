@@ -1,4 +1,6 @@
+
 import 'package:flutter/material.dart';
+import 'package:mbti/ChatRoomPage.dart';
 
 class ChatPage extends StatelessWidget {
   const ChatPage({Key? key}) : super(key: key);
@@ -23,6 +25,13 @@ class ChatPage extends StatelessWidget {
         ),
         body: ListView(
           children: [
+              ElevatedButton(onPressed: () { Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChatRoomPage(chatRoomDocName: "roomA", chatRoomTitle: "ENFJ",)),
+              );
+              }
+              ,child: Text("임시 채팅 방"))
+            ,
             ListTile(
               title: Padding(
                 padding: const EdgeInsets.all(8.0),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mbti/utils/ProfileImageWidget.dart';
-import 'package:mbti/utils/UserIdPwInputWidget.dart';
 
+// Firebase
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 /*
   gihwan-kim
  */
@@ -30,41 +32,43 @@ class MyPageWidget extends StatefulWidget {
 }
 
 class _MyPageWidgetState extends State<MyPageWidget> {
+  final TextEditingController idController = TextEditingController();
+  final TextEditingController pwController = TextEditingController();
   ButtonStyle style =
       ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
 
   // 리스트에 각각의 위젯을 담아서 build 함수에서 뿌려주는 방식
-  final List<Widget> _myPageEntries = [
-    const ProfileImageWidget(),
-    UserIdPwInputWidget(textControllerList: [],),
-    UserDropDownWidget(
-      items: ["ENFJ", "INFJ", "ISTP"],
-      dropdownValue: "ENFJ",
-    ),
-    const Text("관심사 : TODO ... 해야하는데 어케 할지 모르게쒀요"),
-    Row(children: <Widget>[
-      Expanded(
-          child: Align(
-              alignment: Alignment.centerLeft,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
-                ),
-                onPressed:  () {},
-                child: Text('탈퇴'),
-              ))),
-      Expanded(
-          child: Align(
-              alignment: Alignment.centerRight,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
-                ),
-                onPressed: () {},
-                child: Text('저장'),
-              ))),
-    ])
-  ];
+  // final List<Widget> _myPageEntries = [
+  //   const ProfileImageWidget(),
+  //   UserIdPwInputWidget(textControllerList: [],),
+  //   UserDropDownWidget(
+  //     items: ["ENFJ", "INFJ", "ISTP"],
+  //     dropdownValue: "ENFJ",
+  //   ),
+  //   const Text("관심사 : TODO ... 해야하는데 어케 할지 모르게쒀요"),
+  //   Row(children: <Widget>[
+  //     Expanded(
+  //         child: Align(
+  //             alignment: Alignment.centerLeft,
+  //             child: ElevatedButton(
+  //               style: ButtonStyle(
+  //                 backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+  //               ),
+  //               onPressed:  () {},
+  //               child: Text('탈퇴'),
+  //             ))),
+  //     Expanded(
+  //         child: Align(
+  //             alignment: Alignment.centerRight,
+  //             child: ElevatedButton(
+  //               style: ButtonStyle(
+  //                 backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+  //               ),
+  //               onPressed: () {},
+  //               child: Text('저장'),
+  //             ))),
+  //   ])
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -82,16 +86,71 @@ class _MyPageWidgetState extends State<MyPageWidget> {
             ),
           ),
         ),
-        body: ListView.separated(
-          padding: const EdgeInsets.all(10),
-          itemCount: _myPageEntries.length,
-          itemBuilder: (BuildContext context, int index) {
-            return _myPageEntries[index];
-          },
-          // Divider class 를 사용해 구분해줌
-          separatorBuilder: (BuildContext context, int index) => const Divider(
-            color: Colors.white,
-          ),
+        body: ListView(
+            children: [
+              ProfileImageWidget(),
+              Container(
+                width: 350,
+                child: TextField(
+                  controller: idController,
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      filled: true,
+                      labelText: 'Username'
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Container(
+                width: 350,
+                child: TextField(
+                  controller: pwController,
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      filled: true,
+                      labelText: 'Password'
+                  ),
+                  obscureText: true,
+                ),
+              ),
+              UserDropDownWidget(
+                items: ["ENFJ", "INFJ", "ISTP"],
+                dropdownValue: "ENFJ",
+              ),
+              const Text("관심사 : TODO ... 해야하는데"),
+              Row(children: <Widget>[
+                Expanded(
+                    child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                          ),
+                          onPressed:  () {},
+                          child: Text('탈퇴'),
+                        ))),
+                Expanded(
+                    child: Align(
+                        alignment: Alignment.centerRight,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+                          ),
+                          onPressed: () async {
+                            FirebaseAuth.instance.currentUser?.updatePassword(pwController.text);
+                            FirebaseAuth.instance.currentUser?.updatePassword(pwController.text);
+                            await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.email).set({
+                              'id' : idController.text,
+                            });
+
+                            print(pwController.text);
+                            print(idController.text);
+
+                          },
+                          child: Text('저장'),
+                        ))),
+              ])
+            ],
         )));
   }
 }
