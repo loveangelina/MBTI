@@ -228,7 +228,7 @@ class HomeTab extends StatelessWidget{
                       height: MediaQuery
                           .of(context)
                           .size
-                          .height * 0.7,
+                          .height * 0.6,
                       color: Color(0xFFEAEAEA),
                       child: GridView( // article collection
                         padding: EdgeInsets.only(top: 10.0,
