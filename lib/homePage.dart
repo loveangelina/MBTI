@@ -74,6 +74,7 @@ class _HomePageState extends State<HomePage> {
 }
 
 class HomeTab extends StatelessWidget{
+
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
