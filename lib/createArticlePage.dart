@@ -1,10 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'ArticlePage.dart';
+import 'package:intl/intl.dart';
+
+import './model/article.dart';
 
 
 class CreateArticlePage extends StatefulWidget {
-  const CreateArticlePage({Key? key, required this.title}) : super(key: key);
-  final String title;
+  const CreateArticlePage({Key? key,}) : super(key: key);
 
   @override
   State<CreateArticlePage> createState() => _CreateArticlePageState();
@@ -12,8 +16,12 @@ class CreateArticlePage extends StatefulWidget {
 
 class _CreateArticlePageState extends State<CreateArticlePage> {
   //TextField Controller
-  final TextEditingController title = TextEditingController();
-  final TextEditingController content = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController contentController = TextEditingController();
+
+  final String? uid = FirebaseAuth.instance.currentUser?.email;
+
+  late Article article;
 
   //chat authority for dropdownbutton
   var dropDownList = ['모두에게', '작성자만'];
@@ -27,11 +35,18 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
   //if content is empty, then false
   bool isFilledContext = false;
 
+  List<String> finalMBTI = [];
   var MBTI = ['ENFJ', 'INFJ', 'ISTP', 'ESTP', 'ENFP', 'INFP', 'ESFP', 'ISFP', 'ESFJ', 'ISFJ', 'INTP', 'INTJ', 'ESTJ', 'ISTJ', 'ENTJ', 'ENTP'];
   var selectedMBTI = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
 
+  Map<String, String> post = {};
+  List<String> topic = ['임시1', '임시2'];
+  late String currTime;
+  late String aid;
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: appBarSection(),
       body: ListView(
@@ -71,7 +86,7 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
       actions: [
         Container(
           width: 120,
-          padding: EdgeInsets.only(top: 8, bottom: 8),
+          padding: const EdgeInsets.only(top: 8, bottom: 8),
           child: ElevatedButton(
             child: const Text('완료'),
             style: ElevatedButton.styleFrom(
@@ -82,13 +97,33 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
             ),
             onPressed: isFilledContext && isFilledTitle
                 ? () {
-              print(title.text);
-              print(content.text);
-              print(option);
+              currTime = DateFormat('yy/MM/dd - HH:mm:ss').format(DateTime.now());
+              for (int i = 0; i < 16; i++) {
+                if (selectedMBTI[i]) {
+                  finalMBTI.add(MBTI[i]);
+                }
+              }
+              post['title'] = titleController.text;
+              post['content'] = contentController.text;
+
+              uploadArticle();
+              // generateCommentCollection(aid);
+
+              article = Article(
+                createrId: '임시',
+                like: 0, mbti: finalMBTI,
+                post: post, topic: topic,
+                createChatOption: option,
+                createdTime: currTime,
+                aid: aid,
+              );
+
+              titleController.clear();
+              contentController.clear();
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const ArticlePage()
+                    builder: (context) => ArticlePage(article: article,)
                 ),
               );
             }
@@ -99,12 +134,33 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
     );
   }
 
+  Future<void> uploadArticle() async{
+    DocumentReference documentReference = FirebaseFirestore.instance.collection('article').doc();
+    print(documentReference.id);
+    aid = documentReference.id;
+
+    await FirebaseFirestore.instance.collection('article').doc(documentReference.id).set({
+      'createrId' : '임시',
+      'like' : 0,
+      'mbti' : finalMBTI,
+      'post' : post,
+      'topic' : topic,
+      'createChatOption' : option,
+      'createdTime' : currTime,
+      'aid' : documentReference.id,
+    });
+  }
+
+  Future<void> generateCommentCollection(String aid) async{
+    await FirebaseFirestore.instance.collection('article').doc(aid).collection('comment').add({});
+  }
+
   //title section
   Widget titleSection() {
     return TextFormField(
       minLines: 1,
       maxLines: 1,
-      controller: title,
+      controller: titleController,
       decoration: const InputDecoration(
         hintText: '제목',
       ),
@@ -121,7 +177,7 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
     return TextFormField(
       minLines: 20,
       maxLines: 20,
-      controller: content,
+      controller: contentController,
       decoration: const InputDecoration(
         hintText: '내용을 입력하세요',
       ),
@@ -184,17 +240,7 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
   Widget hashTagSection() {
     return Container(
       margin: const EdgeInsets.only(top: 20),
-      child: const Expanded(
-        child: TextField(
-          keyboardType: TextInputType.text,
-          textInputAction: TextInputAction.go,
-          decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding:
-              EdgeInsets.symmetric(horizontal: 15),
-              hintText: "Search..."),
-        ),
-      ),
+
     );
   }
 
@@ -292,7 +338,6 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
           selectedMBTI[index] = !selectedMBTI[index];
         });
       },
-    )
-    ;
+    );
   }
 }

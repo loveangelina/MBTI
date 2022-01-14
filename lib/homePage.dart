@@ -6,6 +6,7 @@ import 'heart.dart';
 import 'model/article.dart';
 import 'alarm.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'createArticlePage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -71,38 +72,46 @@ class _HomePageState extends State<HomePage> {
 
 class HomeTab extends StatelessWidget{
   //Article article = Article.fromDs(data);
-  Article article = Article(createrId: 'createrId', like: 5, mbti: ['ENTP'], post: {'content' : '본문', 'title' : '제목'}, topic: []);
+  Article article = Article(
+    createrId: 'createrId',
+    like: 5, mbti: ['ENTP'],
+    post: {'content' : '본문', 'title' : '제목'},
+    topic: [],
+    createChatOption: true,
+    createdTime: '몰?루',
+    aid: '몰?루',
+  );
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: () async {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              // return object of type Dialog
-              return AlertDialog(
-                title: new Text("알림"),
-                content: new Text("정말로 종료하실건가요?"),
-                actions: <Widget>[
-                  new FlatButton(
-                    child: new Text("종료"),
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => startPage()));
-                    },
-                  ),
-                  new FlatButton(
-                    child: new Text("취소"),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-              );
-            },
-          );
-          return false;
-        },
+      onWillPop: () async {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            // return object of type Dialog
+            return AlertDialog(
+              title: new Text("알림"),
+              content: new Text("정말로 종료하실건가요?"),
+              actions: <Widget>[
+                new FlatButton(
+                  child: new Text("종료"),
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => startPage()));
+                  },
+                ),
+                new FlatButton(
+                  child: new Text("취소"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        return false;
+      },
       child: Scaffold(
           appBar: AppBar(
             backgroundColor: const Color(0xffffffff),
@@ -269,7 +278,12 @@ class HomeTab extends StatelessWidget{
                   foregroundColor: Colors.white,
                   label: '게시글 작성',
                   labelStyle: TextStyle(fontSize: 18.0),
-                  onTap: () => (){},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const CreateArticlePage()),
+                    );
+                  },
                 ),
                 SpeedDialChild(
                   child: Icon(Icons.alarm),
@@ -285,5 +299,4 @@ class HomeTab extends StatelessWidget{
     );
   }
 }
-
 
