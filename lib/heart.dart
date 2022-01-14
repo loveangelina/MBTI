@@ -73,6 +73,17 @@ class _heartPageState extends State<heartPage> {
 
 class heartTab extends StatelessWidget {
 
+  Article article = Article(
+    createrId: 'createrId',
+    like: 5, mbti: ['ENTP'],
+    post: {'content' : '본문', 'title' : '제목'},
+    topic: [],
+    createChatOption: true,
+    createdTime: '몰?루',
+    aid: '몰?루',
+  );
+
+
   @override
   Widget build(BuildContext context) {
     final FirebaseAuth auth = FirebaseAuth.instance;
@@ -152,7 +163,6 @@ class heartTab extends StatelessWidget {
                             else{
                               return const LinearProgressIndicator();
                             }
-
                           }
                       );
                     } else {
