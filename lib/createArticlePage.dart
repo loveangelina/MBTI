@@ -107,7 +107,8 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
                   post: post, topic: topic,
                   createChatOption: option,
                   createdTime: currTime,
-                  comments: []);
+                  // comments: []
+              );
 
               uploadArticle();
 

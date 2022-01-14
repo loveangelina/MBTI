@@ -3,14 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Article {
   String createrId; // article 작성자 id
   int like;
-  List<String> mbti;
-  Map<String, String> post;
-  List<String> topic;
+  List mbti;
+  Map post;
+  List topic;
   bool createChatOption;
   String createdTime;
-  List<ArticleComments> comments;
 
-  Article({required this.createrId, required this.like, required this.mbti, required this.post, required this.topic, required this.createChatOption, required this.createdTime, required this.comments});
+
+  Article({required this.createrId, required this.like, required this.mbti, required this.post, required this.topic, required this.createChatOption, required this.createdTime});
 
   factory Article.fromDs(dynamic data) {
     return Article(
@@ -21,7 +21,6 @@ class Article {
       topic: data['topic'] ?? [],
       createChatOption: data['createChatOption'] ?? true,
       createdTime: data['createdTime'] ?? '',
-      comments: data['comments'] ?? [],
     );
   }
 }
