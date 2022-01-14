@@ -154,7 +154,7 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
                           'id' : idController.text,
                         }
                         );
-                        await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.email).update({'Nickname': Nickname});
+                        await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.email).update({'nickName': Nickname});
                         print(userCredential.user?.email.toString());
 
 
@@ -162,8 +162,9 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
                         if(image != null){
                           FirebaseStorage storage = FirebaseStorage.instance;
                           Reference ref = storage.ref().child('profileImage').child(idController.text);
-                          UploadTask uploadTask = ref.putFile(File(image.path));
-                          uploadTask.then((p0) => p0.ref.getDownloadURL());
+                          await ref.putFile(File(image.path));
+                          String url = await ref.getDownloadURL();
+                          await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.email).update({'profileURL': url});
                         }
 
 
