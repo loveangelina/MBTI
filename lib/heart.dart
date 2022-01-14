@@ -75,7 +75,7 @@ class heartTab extends StatelessWidget {
       topic: [],
       createChatOption: true,
       createdTime: '몰?루',
-      comments: [],
+      // comments: [],
   );
 
   @override
