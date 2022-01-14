@@ -183,7 +183,7 @@ class HomeTab extends StatelessWidget{
                                 return Wrap(
                                   children: [
                                     for( var s in categories)
-                                      _buildChips(s)
+                                      _buildChipsWithRemove(s)
                                   ],
                                 );
                               }
@@ -244,52 +244,6 @@ class HomeTab extends StatelessWidget{
 
                       ),
                     );
-
-                    // if(snapshot.hasData) {
-                    //   print('snapshot : ' + snapshot.toString());
-                    //   List<String> categories = [];
-                    //   Article article = Article.fromDs(snapshot.data);
-                    //   print('article topic ' + article.topic.toString());
-                    //   print('article createrId ' + article.createrId.toString());
-                    //   for (var s in article.topic) {
-                    //     categories.add(s.toString());
-                    //   }
-                    //   for (var m in article.mbti)
-                    //     categories.add(m.toString());
-                    //   for (var test in categories)
-                    //     print('categories' + test);
-                    //
-                    //   if (snapshot.hasError) {
-                    //     return CircularProgressIndicator();
-                    //   } else {
-                    //     if (!snapshot.hasData) {
-                    //       return CircularProgressIndicator();
-                    //     } else {
-                    //       return Container(
-                    //         height: MediaQuery
-                    //             .of(context)
-                    //             .size
-                    //             .height * 0.7,
-                    //         color: Color(0xFFEAEAEA),
-                    //         child: GridView( // article collection
-                    //             padding: EdgeInsets.only(top: 10.0,
-                    //                 right: 10.0,
-                    //                 left: 10.0),
-                    //             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    //               crossAxisCount: 2,
-                    //               childAspectRatio: 1.0,
-                    //               mainAxisSpacing: 10.0,
-                    //               crossAxisSpacing: 10.0,
-                    //             ),
-                    //             children: snapshot.data!.docs.map<Widget>((DocumentSnapshot data) =>_buildCards(categories, article)).toList(),
-                    //         ),
-                    //       );
-                    //     }
-                    //   }
-                    // }
-                    // else{
-                    //   return CircularProgressIndicator();
-                    // }
                   }
               ),
 
@@ -337,12 +291,22 @@ class HomeTab extends StatelessWidget{
     );
   }
 
-  Widget _buildChips(String chip) {
+  Widget _buildChipsWithRemove(String chip) {
     return Padding(
       child: Chip(
         backgroundColor: Color(0xFFEAEAEA),
         label: Text(chip),
         onDeleted: (){},
+      ),
+      padding: const EdgeInsets.only(right: 8.0),
+    );
+  }
+
+  Widget _buildChips(String chip) {
+    return Padding(
+      child: Chip(
+        backgroundColor: Color(0xFFEAEAEA),
+        label: Text(chip),
       ),
       padding: const EdgeInsets.only(right: 8.0),
     );
@@ -381,8 +345,8 @@ class HomeTab extends StatelessWidget{
                 Transform(
                   child: Wrap(
                     children: [
-                      for( var s in categories)
-                        _buildChips(s)
+                      _buildChips(categories[0]),
+                      _buildChips(categories[1]),
                     ],
                   ),
                   transform: Matrix4.identity()..scale(0.8),
@@ -391,48 +355,99 @@ class HomeTab extends StatelessWidget{
               ],
             ),
 
-            Text(
-              article.post.values.toString(),
-              style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black54
-              ),
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 35)),
             Container(
-                height: 60,
+                height: 80,
+                child: Column(
+                    crossAxisAlignment:CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                          child: Text(article.post['title'].toString(),
+                              style: TextStyle(fontSize: 18,
+                                  fontWeight: FontWeight.bold
+                              ))
+                      ),
+                      Container(
+                          child: Text(article.post['content'].toString(),
+                              style: TextStyle(fontSize: 15,
+                              ))
+                      )
+                    ]
+                )
+            ),
+
+            // Text(
+            //   article.post.values.toString(),
+            //   style: TextStyle(
+            //       fontSize: 18,
+            //       color: Colors.black54
+            //   ),
+            // ),
+
+            Container(
+                height: 45,
                 child: Row(
                     children: [
                       Container(
-                        child: Image.asset('image/logo.png'),
+                        child: Image.network("https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg"),
                         width: 50,
                         height: 50,
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(right: 15),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start ,
-                        children: [
-                          Text(article.createrId),
-                          Text(article.createdTime),
-                        ],
+                      const SizedBox(width: 1),
+                      Row(
+                          children:[
+                            Column(
+                              crossAxisAlignment:CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                    width: 70,
+                                    child: Text(article.createrId,
+                                        style: TextStyle(fontSize: 14
+                                        ))
+                                ),
+                                Flexible(
+                                    child: Container(
+                                        width: 71,
+                                        child: Text(article.createdTime,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: 10.0
+                                            )
+                                        )
+                                    )
+                                ),
+                              ],
+                            ),
+                          ]
                       )
                     ]
                 )
             )
+
+            // Container(
+            //   height: 60,
+            //   child: Row(
+            //       children: [
+            //         Container(
+            //           child: Image.asset('image/logo.png'),
+            //           width: 50,
+            //           height: 50,
+            //         ),
+            //         const Padding(
+            //           padding: EdgeInsets.only(right: 15),
+            //         ),
+            //         Column(
+            //           crossAxisAlignment: CrossAxisAlignment.start ,
+            //           children: [
+            //             Text(article.createrId),
+            //             Text(article.createdTime),
+            //           ],
+            //         )
+            //       ]
+            //   )
+            // )
           ],
         ),
       ),
     );
   }
-
-// getDocs() async{
-//   QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection("article").get();
-//
-//   for (int i = 0; i < querySnapshot.docs.length; i++) {
-//     var a = querySnapshot.docs[i];
-//     print(a.data());
-//   }
-// }
 }
