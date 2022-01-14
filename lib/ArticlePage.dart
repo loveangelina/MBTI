@@ -32,46 +32,54 @@ class _ArticlePageState extends State<ArticlePage> {
     // print(currId);
     return Scaffold(
       appBar: appBarSection(),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+      body: Column(
         children: [
-          titleSection(article.createrId, article.post['title']),
-          contentSection(article.post['content']),
-          Divider(
-            color: Colors.black,
-            thickness: 3,
-          ),
           Container(
-            height: 100,
-            child: Center(
-              child: GridView.count(
-                crossAxisCount: 4,
-                children: List.generate(
-                    topic.length, (index) => generateChip(topic[index])
+            height: MediaQuery.of(context).size.height * 0.8,
+            child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              children: [
+                titleSection(article.createrId, article.post['title']),
+                contentSection(article.post['content']),
+                Divider(
+                  color: Colors.grey,
+                  thickness: 1,
                 ),
-              ),
+                Container(
+                  height: 100,
+                  child: Center(
+                    child: GridView.count(
+                      crossAxisCount: 4,
+                      children: List.generate(
+                          topic.length, (index) => generateChip(topic[index])
+                      ),
+                    ),
+                  ),
+                ),
+                likeAndCommentSection(article.like, 0),
+                advertisementSection(),
+                Container(
+                  height: 200,
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance.collection('article').doc(article.aid).collection('comment').snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.data == null) {
+                        return Container();
+                      }else {
+                        // print(snapshot.data!.docs);
+                        return ListView(
+                          children: List.generate(snapshot.data!.docs.length, (index) => generateComment(snapshot.data!.docs[index]))
+                        );
+                      }
+                    },
+                  ),
+                ),
+                // commentSection(),
+
+              ],
             ),
           ),
-          likeAndCommentSection(article.like, 0),
-          advertisementSection(),
-          Container(
-            height: 200,
-            child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection('article').doc(article.aid).collection('comment').snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.data == null) {
-                  return Container();
-                }else {
-                  // print(snapshot.data!.docs);
-                  return ListView(
-                    children: List.generate(snapshot.data!.docs.length, (index) => generateComment(snapshot.data!.docs[index]))
-                  );
-                }
-              },
-            ),
-          ),
-          // commentSection(),
-          _buildTextComposer(article.aid, '임시'),
+          _buildTextComposer(article.aid, currId),
         ],
       ),
     );
@@ -109,7 +117,7 @@ class _ArticlePageState extends State<ArticlePage> {
   }
 
   //title and poster section
-  Widget titleSection(String userName, String? title) {
+  Widget titleSection(String? userName, String? title) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -125,7 +133,7 @@ class _ArticlePageState extends State<ArticlePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                userName,
+                userName ?? '임시',
                 style: TextStyle(
                   color: Colors.grey,
                 ),
@@ -277,7 +285,7 @@ class _ArticlePageState extends State<ArticlePage> {
           },
         ),
         const Divider(
-          color: Colors.black,
+          color: Colors.grey,
           thickness: 1,
         )
       ],
@@ -294,7 +302,7 @@ class _ArticlePageState extends State<ArticlePage> {
   final TextEditingController _textController = TextEditingController();
   bool _isComposing = false;
 
-  Widget _buildTextComposer(String aid, String uid) {
+  Widget _buildTextComposer(String aid, String? uid) {
     return IconTheme(
       data: IconThemeData(color: Theme.of(context).accentColor),
       child: Container(
@@ -331,7 +339,7 @@ class _ArticlePageState extends State<ArticlePage> {
   }
 
   // 메시지 전송 버튼이 클릭될 때 호출
-  void _handleSubmitted(String text, String aid, String uid) {
+  void _handleSubmitted(String text, String aid, String? uid) {
     _textController.clear();
     setState(() {
       _isComposing = false;
@@ -341,10 +349,10 @@ class _ArticlePageState extends State<ArticlePage> {
     });
   }
 
-  Future<void> addComment(String content, String aid, String uid) async {
-    print(content);
-    print(aid);
-    print(uid);
+  Future<void> addComment(String content, String aid, String? uid) async {
+    // print(content);
+    // print(aid);
+    // print(uid);
     await FirebaseFirestore.instance.collection('article').doc(aid).collection('comment').add({
       'content' : content,
       'userId' : uid,
@@ -352,22 +360,25 @@ class _ArticlePageState extends State<ArticlePage> {
     });
   }
 
-  Future<void> createChatroom(String commenterId) async{
-    String? currId = auth?.email;
+  Future<void> createChatroom(String commenterId, String? currId) async{
     String chatRoom = 'temp';
-    if (currId != null && commenterId != null)
-      chatRoom = currId+commenterId;
+    String RoomTitle = 'temp';
+    if (currId != null && commenterId != null) {
+      chatRoom = currId + '|' + commenterId;
+      RoomTitle = currId + '님과 ' + commenterId + '님의 채팅방';
+    }
+
+    // print(chatRoom);
 
     await FirebaseFirestore.instance.collection('chatRooms').doc(chatRoom).set({
-      'uid1' : commenterId,
-      'uid2' : currId,
+      'RoomTitle' : RoomTitle,
+      'users' : [currId, commenterId],
     });
   }
 
   //generate comment v1
   Widget generateComment(DocumentSnapshot data) {
     ArticleComments articleComments = ArticleComments.fromDs(data);
-
     return Column(
       children: [
         Row(
@@ -401,12 +412,12 @@ class _ArticlePageState extends State<ArticlePage> {
                 Icons.chat_bubble,
               ),
               onPressed: () {
-                createChatroom(articleComments.userId);
+                createChatroom(articleComments.userId, currId);
 
-                String? currId = auth?.email;
                 String chatRoom = 'temp';
-                if (currId != null && articleComments.userId != null)
-                  chatRoom = currId+articleComments.userId;
+                if (currId != null && articleComments.userId != null) {
+                  chatRoom = currId!+'|'+articleComments.userId;
+                }
 
                 // Navigator.push(
                 //   context,
@@ -417,8 +428,8 @@ class _ArticlePageState extends State<ArticlePage> {
           ],
         ),
         const Divider(
-          color: Colors.black,
-          thickness: 2,
+          color: Colors.grey,
+          thickness: 1,
         ),
       ],
     );
