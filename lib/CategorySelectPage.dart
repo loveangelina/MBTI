@@ -1,10 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'homePage.dart';
 
 class CategorySelectPage extends StatelessWidget{
+
   @override
   Widget build(BuildContext context) {
+    resetSelected();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xffffffff),
@@ -27,27 +32,27 @@ class CategorySelectPage extends StatelessWidget{
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Container(child: CategoryButton(text: '연애',), height: 130, width: 130,),
-                    Container(child: CategoryButton(text: '운동',), height: 130, width: 130,),
-                    Container(child: CategoryButton(text: '게임',), height: 130, width: 130,),
+                    Container(child: CategoryButton(bigText: '연애', smallText1: 'test1', smallText2: 'test2', smallText3: 'test3',), height: 130, width: 130,),
+                    Container(child: CategoryButton(bigText: '운동', smallText1: 'test1', smallText2: 'test2', smallText3: 'test3',), height: 130, width: 130,),
+                    Container(child: CategoryButton(bigText: '게임', smallText1: 'test1', smallText2: 'test2', smallText3: 'test3',), height: 130, width: 130,),
                   ],
                 ),
                 SizedBox(height: 6,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Container(child: CategoryButton(text: '공부',), height: 130, width: 130,),
-                    Container(child: CategoryButton(text: '맛집',), height: 130, width: 130,),
-                    Container(child: CategoryButton(text: '학교생활',), height: 130, width: 130,),
+                    Container(child: CategoryButton(bigText: '공부', smallText1: 'test1', smallText2: 'test2', smallText3: 'test3',), height: 130, width: 130,),
+                    Container(child: CategoryButton(bigText: '맛집', smallText1: 'test1', smallText2: 'test2', smallText3: 'test3',), height: 130, width: 130,),
+                    Container(child: CategoryButton(bigText: '학교생활', smallText1: 'test1', smallText2: 'test2', smallText3: 'test3',), height: 130, width: 130,),
                   ],
                 ),
                 SizedBox(height: 6,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Container(child: CategoryButton(text: '알바',), height: 130, width: 130,),
-                    Container(child: CategoryButton(text: '대인관계',), height: 130, width: 130,),
-                    Container(child: CategoryButton(text: '연예',), height: 130, width: 130,),
+                    Container(child: CategoryButton(bigText: '알바', smallText1: 'test1', smallText2: 'test2', smallText3: 'test3',), height: 130, width: 130,),
+                    Container(child: CategoryButton(bigText: '대인관계', smallText1: 'test1', smallText2: 'test2', smallText3: 'test3',), height: 130, width: 130,),
+                    Container(child: CategoryButton(bigText: '연예', smallText1: 'test1', smallText2: 'test2', smallText3: 'test3',), height: 130, width: 130,),
                   ],
                 ),
               ],
@@ -60,7 +65,9 @@ class CategorySelectPage extends StatelessWidget{
                 Text("MBTI를 모르겠어요"),
                 Text("MBTI 검사 바로가기"),
                 ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      initFirebase();
+                      resetSelected();
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -119,12 +126,19 @@ class CategorySelectPage extends StatelessWidget{
       ],
     );
   }
-
+  initFirebase() async {
+    FirebaseFirestore.instance.collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.email)
+          .update({'category': selected});
+  }
 }
 
 class CategoryButton extends StatefulWidget {
-  final dynamic text;
-  const CategoryButton({Key? key, this.text}) : super(key: key);
+  final dynamic bigText;
+  final dynamic smallText1;
+  final dynamic smallText2;
+  final dynamic smallText3;
+  const CategoryButton({Key? key, this.bigText, this.smallText1, this.smallText2, this.smallText3}) : super(key: key);
 
   @override
   _CategoryButtonState createState() => _CategoryButtonState();
@@ -144,21 +158,42 @@ class _CategoryButtonState extends State<CategoryButton> {
     });
   }
 
-  void smallButton1Clicked(){
+  void smallButton1Clicked(text){
     setState(() {
       button1Selected = !button1Selected;
+      if(button1Selected){
+        selected[widget.bigText].add(text);
+      }
+      else{
+        selected[widget.bigText].remove(text);
+      }
+      print(selected);
     });
   }
 
-  void smallButton2Clicked(){
+  void smallButton2Clicked(text){
     setState(() {
       button2Selected = !button2Selected;
+      if(button2Selected){
+        selected[widget.bigText].add(text);
+      }
+      else{
+        selected[widget.bigText].remove(text);
+      }
+      print(selected);
     });
   }
 
-  void smallButton3Clicked(){
+  void smallButton3Clicked(text){
     setState(() {
       button3Selected = !button3Selected;
+      if(button3Selected){
+        selected[widget.bigText].add(text);
+      }
+      else{
+        selected[widget.bigText].remove(text);
+      }
+      print(selected);
     });
   }
 
@@ -181,7 +216,7 @@ class _CategoryButtonState extends State<CategoryButton> {
               onPressed: (){
                 bigButtonClicked();
               },
-              child: Text(widget.text, textScaleFactor: 2, style: TextStyle(color: Colors.white),),
+              child: Text(widget.bigText, textScaleFactor: 2, style: TextStyle(color: Colors.white),),
               shape: RoundedRectangleBorder(),
               fillColor: Colors.black45,
             ),
@@ -195,9 +230,9 @@ class _CategoryButtonState extends State<CategoryButton> {
               width: 130/2,
               child: RawMaterialButton(
                 onPressed: (){
-                  smallButton1Clicked();
+                  smallButton1Clicked(widget.smallText1);
                 },
-                child: Text('test', style: TextStyle(color: Colors.white),),
+                child: Text(widget.smallText1, style: TextStyle(color: Colors.white),),
                 shape: RoundedRectangleBorder(),
                 fillColor: button1Selected? Colors.pinkAccent : Colors.purple,
               ),
@@ -212,9 +247,9 @@ class _CategoryButtonState extends State<CategoryButton> {
               width: 130/2,
               child: RawMaterialButton(
                 onPressed: (){
-                  smallButton2Clicked();
+                  smallButton2Clicked(widget.smallText2);
                 },
-                child: Text('test', style: TextStyle(color: Colors.white),),
+                child: Text(widget.smallText2, style: TextStyle(color: Colors.white),),
                 shape: RoundedRectangleBorder(),
                 fillColor: button2Selected? Colors.pinkAccent : Colors.purple,
               ),
@@ -230,9 +265,9 @@ class _CategoryButtonState extends State<CategoryButton> {
               width: 130/2,
               child: RawMaterialButton(
                 onPressed: (){
-                  smallButton3Clicked();
+                  smallButton3Clicked(widget.smallText3);
                 },
-                child: Text('test', style: TextStyle(color: Colors.white),),
+                child: Text(widget.smallText3, style: TextStyle(color: Colors.white),),
                 shape: RoundedRectangleBorder(),
                 fillColor: button3Selected? Colors.pinkAccent : Colors.purple,
               ),
@@ -263,4 +298,20 @@ class _CategoryButtonState extends State<CategoryButton> {
       ]
     );
   }
+}
+
+Map selected = {
+  '연애': [],
+  '운동': [],
+  '게임': [],
+  '공부': [],
+  '맛집': [],
+  '학교생활': [],
+  '알바': [],
+  '대인관계': [],
+  '연예': [],
+};
+
+void resetSelected(){
+  selected.forEach((key, value) {value.clear();});
 }
