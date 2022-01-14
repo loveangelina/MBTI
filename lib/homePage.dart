@@ -5,6 +5,7 @@ import 'package:mbti/model/users.dart';
 import 'package:mbti/startPage.dart';
 import 'ChatPage.dart';
 import 'MyPage.dart';
+import 'createArticlePage.dart';
 import 'heart.dart';
 import 'model/article.dart';
 import 'alarm.dart';
@@ -275,7 +276,12 @@ class HomeTab extends StatelessWidget{
                   foregroundColor: Colors.white,
                   label: '게시글 작성',
                   labelStyle: TextStyle(fontSize: 18.0),
-                  onTap: () => (){},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const CreateArticlePage()),
+                    );
+                  },
                 ),
                 SpeedDialChild(
                   child: Icon(Icons.alarm),

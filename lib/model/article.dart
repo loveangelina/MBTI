@@ -1,11 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class Article {
   String createrId; // article 작성자 id
   int like;
-  List<String> mbti;
-  Map<String, String> post;
-  List<String> topic;
+  List mbti;
+  Map post;
+  List topic;
   bool createChatOption;
   String createdTime;
   String aid;
