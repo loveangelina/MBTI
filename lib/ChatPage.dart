@@ -2,11 +2,16 @@
 import 'package:flutter/material.dart';
 import 'package:mbti/ChatRoomPage.dart';
 
+import 'model/chatRoom.dart';
+
 class ChatPage extends StatelessWidget {
   const ChatPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String userid = FirebaseAuth.instance.currentUser!.email.toString();
+    print(userid == 'test@gmail.com');
+
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -67,6 +72,17 @@ class ChatPage extends StatelessWidget {
                         ),
                       ],
                     ),
+                    color: Colors.black87,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                SizedBox(width: 20,),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(chatRoom.roomTitle),
+                    SizedBox(height: 20,),
+                    Text('내용'),
                   ],
                 ),
               ),
@@ -80,3 +96,4 @@ class ChatPage extends StatelessWidget {
     );
   }
 }
+
