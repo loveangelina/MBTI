@@ -1,11 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
+import 'package:mbti/ChatRoomPage.dart';
 
 import 'model/chatRoom.dart';
 
 class ChatPage extends StatelessWidget {
-  ChatPage({Key? key}) : super(key: key);
+  const ChatPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,41 +28,49 @@ class ChatPage extends StatelessWidget {
             padding: EdgeInsets.only(right: 10),
           ),
         ),
-        body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('chatRooms')
-              .where('users', arrayContains: "test@gmail.com")
-              .snapshots(),
-          builder: (context, snapshot) {
-            if(snapshot.hasData) {
-              return ListView(
-                  children: snapshot.data!.docs.map((DocumentSnapshot documentSnapshot) => _buildChatRoom(documentSnapshot)).toList()
-              );
-            } else {
-              return Container();
-            }
-          }
-        )
-    );
-  }
-
-  Widget _buildChatRoom(DocumentSnapshot snapshot) {
-    ChatRoom chatRoom = ChatRoom.fromDs(snapshot);
-
-    return ListTile(
-      title: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        body: ListView(
           children: [
-            Row(
-              children: [
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: Image.asset('image/logo.png').image
+              ElevatedButton(onPressed: () { Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChatRoomPage(chatRoomDocName: "roomA", chatRoomTitle: "ENFJ",)),
+              );
+              }
+              ,child: Text("임시 채팅 방"))
+            ,
+            ListTile(
+              title: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.all(10.0),
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.black87,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    Column(
+                      children: [
+                        Text('제목'),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                        ),
+                        Text('내용'),
+                      ],
+                    ),
+                    Padding(
+                        padding: EdgeInsets.only(right: 180)
+                    ),
+                    Column(
+                      children: [
+                        Text('오후 12:47'),
+                        Chip(
+                          backgroundColor: Color(0xFFEAEAEA),
+                          label: Text('4'),
+                        ),
+                      ],
                     ),
                     color: Colors.black87,
                     shape: BoxShape.circle,
@@ -77,22 +85,15 @@ class ChatPage extends StatelessWidget {
                     Text('내용'),
                   ],
                 ),
-              ],
+              ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text('오후 12:47'),
-                SizedBox(height: 10,),
-                Chip(
-                  backgroundColor: Color(0xFFEAEAEA),
-                  label: Text('4'),
-                ),
-              ],
+            Divider(
+              height: 1,
+              color: Colors.grey,
             ),
           ],
-        ),
-      ),
+        )
     );
   }
 }
+
