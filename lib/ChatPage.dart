@@ -32,7 +32,7 @@ class ChatPage extends StatelessWidget {
             print(snapshot.data);
             return ListView(
               children: [
-                //chatRoom(opponentID: ''),
+                //chatRoom(opponentID: 'ㅇ'),
                 Divider(),
                 Divider(),
               ],
