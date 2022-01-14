@@ -1,7 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mbti/model/users.dart';
 import 'package:mbti/startPage.dart';
 import 'ChatPage.dart';
 import 'MyPage.dart';
@@ -9,6 +6,7 @@ import 'heart.dart';
 import 'model/article.dart';
 import 'alarm.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'createArticlePage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -73,7 +71,16 @@ class _HomePageState extends State<HomePage> {
 }
 
 class HomeTab extends StatelessWidget{
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  //Article article = Article.fromDs(data);
+  Article article = Article(
+    createrId: 'createrId',
+    like: 5, mbti: ['ENTP'],
+    post: {'content' : '본문', 'title' : '제목'},
+    topic: [],
+    createChatOption: true,
+    createdTime: '몰?루',
+    aid: '몰?루',
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +155,7 @@ class HomeTab extends StatelessWidget{
           body: ListView(
             children: [
               Container( // 나의 카테고리
-                height: 130,
+                height: 80,
                 child: Padding(
                   padding: EdgeInsets.only(left: 20.0, top: 3.0),
                   child: Column(
@@ -162,92 +169,88 @@ class HomeTab extends StatelessWidget{
                           fontSize: 15,
                         ),
                       ),
-
-                      StreamBuilder<DocumentSnapshot>(
-                        //stream: FirebaseFirestore.instance.collection('users').doc(auth.currentUser!.email).snapshots(),
-                          stream: FirebaseFirestore.instance.collection('users').doc('Kva4iMYOLDI1ijPnx9je').snapshots(),
-                          builder: (context, snapshot) {
-                            List<String> categories = [];
-                            Users users = Users.fromDs(snapshot.data);
-                            for(var s in users.category.values){
-                              for(var c in s)
-                                categories.add(c.toString());
-                            }
-
-                            if(snapshot.hasError){
-                              return Container();
-                            } else{
-                              if(!snapshot.hasData){
-                                return Container();
-                              } else{
-                                return Wrap(
-                                  children: [
-                                    for( var s in categories)
-                                      _buildChipsWithRemove(s)
-                                  ],
-                                );
-                              }
-                            }
-                          }
+                      Chip(
+                        backgroundColor: Color(0xFFEAEAEA),
+                        label: Text('대학생'),
+                        onDeleted: (){},
                       )
                     ],
                   ),
                 ),
               ),
               const Divider( thickness: 1, color: Colors.black87, height: 0,),
+              Container(
+                height: MediaQuery.of(context).size.height*0.7,
+                color: Color(0xFFEAEAEA),
+                child: GridView.builder(
+                  padding: EdgeInsets.only(top: 10.0, right: 10.0, left: 10.0),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 1.0,
+                    mainAxisSpacing: 10.0,
+                    crossAxisSpacing: 10.0,
+                  ),
+                  itemBuilder: (context, index) {
+                    return Card(
+                      elevation: 4,
+                      margin: EdgeInsets.all(4.0),
+                      color: Colors.white,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 12.0, top: 6.0, bottom: 2.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Transform(
+                                  child: Chip(
+                                    backgroundColor: Color(0xFFEAEAEA),
+                                    label: Text('대학생'),
 
-              StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance.collection('article').snapshots(),
-                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    //getDocs();
-                    //print('snapshot : ' + snapshot.toString() + 'enter ');
+                                  ),
+                                  transform: Matrix4.identity()..scale(0.8),
+                                )
 
-
-
-                    if (snapshot.hasError) {
-                      return Container(
-                        color: Colors.white,
-                        child: Center(
-                          child: Text(
-                            'Something went wrong',
-                          ),
+                              ],
+                            ),
+                            Text(
+                              article.post[index].toString() + index.toString(),
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.black54
+                              ),
+                            ),
+                            Padding(padding: EdgeInsets.only(bottom: 35)),
+                            Container(
+                                height: 60,
+                                child: Row(
+                                    children: [
+                                      Container(
+                                        child: Image.network("https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg"),
+                                        width: 50,
+                                        height: 50,
+                                      ),
+                                      const Padding(
+                                        padding: EdgeInsets.only(right: 15),
+                                      ),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start ,
+                                        children: [
+                                          Text(article.createrId),
+                                          Text('00분전'),
+                                        ],
+                                      )
+                                    ]
+                                )
+                            )
+                          ],
                         ),
-                      );
-                    }
-
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Container(
-                        color: Colors.white,
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                    }
-
-                    return Container(
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height * 0.7,
-                      color: Color(0xFFEAEAEA),
-                      child: GridView( // article collection
-                        padding: EdgeInsets.only(top: 10.0,
-                            right: 10.0,
-                            left: 10.0),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 1.0,
-                          mainAxisSpacing: 10.0,
-                          crossAxisSpacing: 10.0,
-                        ),
-                        children: snapshot.data!.docs.map<Widget>((DocumentSnapshot data) =>_buildCards(data)).toList(),
-
                       ),
                     );
-                  }
-              ),
-
-
+                  },
+                  itemCount: 10,
+                ),
+              )
             ],
           ),
           floatingActionButton: SpeedDial(
@@ -275,7 +278,12 @@ class HomeTab extends StatelessWidget{
                   foregroundColor: Colors.white,
                   label: '게시글 작성',
                   labelStyle: TextStyle(fontSize: 18.0),
-                  onTap: () => (){},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const CreateArticlePage()),
+                    );
+                  },
                 ),
                 SpeedDialChild(
                   child: Icon(Icons.alarm),
@@ -290,164 +298,5 @@ class HomeTab extends StatelessWidget{
       ),
     );
   }
-
-  Widget _buildChipsWithRemove(String chip) {
-    return Padding(
-      child: Chip(
-        backgroundColor: Color(0xFFEAEAEA),
-        label: Text(chip),
-        onDeleted: (){},
-      ),
-      padding: const EdgeInsets.only(right: 8.0),
-    );
-  }
-
-  Widget _buildChips(String chip) {
-    return Padding(
-      child: Chip(
-        backgroundColor: Color(0xFFEAEAEA),
-        label: Text(chip),
-      ),
-      padding: const EdgeInsets.only(right: 8.0),
-    );
-  }
-
-  Widget _buildCards(DocumentSnapshot data){
-    Article article = Article.fromDs(data);
-
-    print('article 작성자 id' + article.createrId);
-    print(article.post.values);
-
-
-    List<String> categories = [];
-
-    print('article topic ' + article.topic.toString());
-    print('article createrId ' + article.createrId.toString());
-    for (var s in article.topic) {
-      categories.add(s.toString());
-    }
-    for (var m in article.mbti)
-      categories.add(m.toString());
-    for (var test in categories)
-      print('categories' + test);
-
-    return Card(
-      elevation: 4,
-      margin: EdgeInsets.all(4.0),
-      color: Colors.white,
-      child: Padding(
-        padding: EdgeInsets.only(left: 12.0, top: 6.0, bottom: 2.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Transform(
-                  child: Wrap(
-                    children: [
-                      _buildChips(categories[0]),
-                      _buildChips(categories[1]),
-                    ],
-                  ),
-                  transform: Matrix4.identity()..scale(0.8),
-                )
-
-              ],
-            ),
-
-            Container(
-                height: 80,
-                child: Column(
-                    crossAxisAlignment:CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                          child: Text(article.post['title'].toString(),
-                              style: TextStyle(fontSize: 18,
-                                  fontWeight: FontWeight.bold
-                              ))
-                      ),
-                      Container(
-                          child: Text(article.post['content'].toString(),
-                              style: TextStyle(fontSize: 15,
-                              ))
-                      )
-                    ]
-                )
-            ),
-
-            // Text(
-            //   article.post.values.toString(),
-            //   style: TextStyle(
-            //       fontSize: 18,
-            //       color: Colors.black54
-            //   ),
-            // ),
-
-            Container(
-                height: 45,
-                child: Row(
-                    children: [
-                      Container(
-                        child: Image.network("https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg"),
-                        width: 50,
-                        height: 50,
-                      ),
-                      const SizedBox(width: 1),
-                      Row(
-                          children:[
-                            Column(
-                              crossAxisAlignment:CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                    width: 70,
-                                    child: Text(article.createrId,
-                                        style: TextStyle(fontSize: 14
-                                        ))
-                                ),
-                                Flexible(
-                                    child: Container(
-                                        width: 71,
-                                        child: Text(article.createdTime,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontSize: 10.0
-                                            )
-                                        )
-                                    )
-                                ),
-                              ],
-                            ),
-                          ]
-                      )
-                    ]
-                )
-            )
-
-            // Container(
-            //   height: 60,
-            //   child: Row(
-            //       children: [
-            //         Container(
-            //           child: Image.asset('image/logo.png'),
-            //           width: 50,
-            //           height: 50,
-            //         ),
-            //         const Padding(
-            //           padding: EdgeInsets.only(right: 15),
-            //         ),
-            //         Column(
-            //           crossAxisAlignment: CrossAxisAlignment.start ,
-            //           children: [
-            //             Text(article.createrId),
-            //             Text(article.createdTime),
-            //           ],
-            //         )
-            //       ]
-            //   )
-            // )
-          ],
-        ),
-      ),
-    );
-  }
 }
+
