@@ -40,7 +40,7 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
   var selectedMBTI = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
 
   Map<String, String> post = {};
-  List<String> topic = [];
+  List<String> topic = ['임시1', '임시2'];
   late String currTime;
   late String aid;
 
@@ -107,7 +107,7 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
               post['content'] = contentController.text;
 
               uploadArticle();
-              generateCommentCollection(aid);
+              // generateCommentCollection(aid);
 
               article = Article(
                 createrId: '임시',

@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'homePage.dart';
+import 'package:intl/intl.dart';
 
 import './model/article.dart';
 
@@ -17,22 +19,40 @@ class _ArticlePageState extends State<ArticlePage> {
 
   final auth = FirebaseAuth.instance.currentUser;
   late String? currId;
+  late int commentCount;
 
   @override
   Widget build(BuildContext context) {
     final Article article = widget.article;
     currId = FirebaseAuth.instance.currentUser?.email;
-    print(FirebaseAuth.instance.currentUser);
-    print(currId);
+    List topic = article.topic;
+    // commentCount = FirebaseFirestore.instance.collection('article').doc(article.aid).collection('comment').snapshots().length;
+    // print(article.aid);
+    // print(FirebaseAuth.instance.currentUser);
+    // print(currId);
     return Scaffold(
       appBar: appBarSection(),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         children: [
-          titleSection(),
-          contentSection(),
-          tagSection(),
-          likeAndCommentSection(),
+          titleSection(article.createrId, article.post['title']),
+          contentSection(article.post['content']),
+          Divider(
+            color: Colors.black,
+            thickness: 3,
+          ),
+          Container(
+            height: 100,
+            child: Center(
+              child: GridView.count(
+                crossAxisCount: 4,
+                children: List.generate(
+                    topic.length, (index) => generateChip(topic[index])
+                ),
+              ),
+            ),
+          ),
+          likeAndCommentSection(article.like, 0),
           advertisementSection(),
           Container(
             height: 200,
@@ -50,7 +70,8 @@ class _ArticlePageState extends State<ArticlePage> {
               },
             ),
           ),
-          commentSection(),
+          // commentSection(),
+          _buildTextComposer(article.aid, '임시'),
         ],
       ),
     );
@@ -88,7 +109,7 @@ class _ArticlePageState extends State<ArticlePage> {
   }
 
   //title and poster section
-  Widget titleSection() {
+  Widget titleSection(String userName, String? title) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -103,16 +124,16 @@ class _ArticlePageState extends State<ArticlePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'userName',
+              Text(
+                userName,
                 style: TextStyle(
                   color: Colors.grey,
                 ),
               ),
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 5),
-                child: const Text(
-                  'title',
+                child: Text(
+                  title ?? '임시',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -138,11 +159,11 @@ class _ArticlePageState extends State<ArticlePage> {
   }
 
   //content section
-  Widget contentSection() {
+  Widget contentSection(String? content) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
-      child: const Text(
-        'content',
+      child: Text(
+        content ?? '임시',
         style: TextStyle(
           fontSize: 18,
         ),
@@ -166,7 +187,7 @@ class _ArticlePageState extends State<ArticlePage> {
   }
 
   //like count and comment count
-  Widget likeAndCommentSection() {
+  Widget likeAndCommentSection(int likes, int commentCount) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
@@ -179,8 +200,8 @@ class _ArticlePageState extends State<ArticlePage> {
                 const Icon(
                   Icons.thumb_up_alt,
                 ),
-                const Text(
-                    'count of likes'
+                Text(
+                    likes.toString()
                 ),
               ],
             ),
@@ -191,8 +212,8 @@ class _ArticlePageState extends State<ArticlePage> {
                 const Icon(
                   Icons.chat_bubble_outline,
                 ),
-                const Text(
-                    'count of comments'
+                Text(
+                    commentCount.toString()
                 ),
               ],
             ),
@@ -264,6 +285,73 @@ class _ArticlePageState extends State<ArticlePage> {
   }
 
 
+  Widget comment() {
+    return Row(
+
+    );
+  }
+
+  final TextEditingController _textController = TextEditingController();
+  bool _isComposing = false;
+
+  Widget _buildTextComposer(String aid, String uid) {
+    return IconTheme(
+      data: IconThemeData(color: Theme.of(context).accentColor),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Row(
+          children: <Widget>[
+            Flexible(
+              child: TextField(
+                controller: _textController,
+                onChanged: (text) {
+                  setState(() {
+                    _isComposing = text.isNotEmpty;
+                  });
+                },
+                // onSubmitted: _isComposing ? () => _handleSubmitted(_textController.text, aid, uid) : null,
+                decoration:
+                InputDecoration.collapsed(hintText: "댓글을 작성하세요"),
+              ),
+            ),
+            // 전송 버튼
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: IconButton(
+                icon: Icon(Icons.send),
+                onPressed: _isComposing
+                    ? () => _handleSubmitted(_textController.text, aid, uid)
+                    : null,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // 메시지 전송 버튼이 클릭될 때 호출
+  void _handleSubmitted(String text, String aid, String uid) {
+    _textController.clear();
+    setState(() {
+      _isComposing = false;
+    });
+    setState(() {
+      addComment(text, aid, uid);
+    });
+  }
+
+  Future<void> addComment(String content, String aid, String uid) async {
+    print(content);
+    print(aid);
+    print(uid);
+    await FirebaseFirestore.instance.collection('article').doc(aid).collection('comment').add({
+      'content' : content,
+      'userId' : uid,
+      'time' : DateFormat('yy/MM/dd - HH:mm:ss').format(DateTime.now()),
+    });
+  }
+
   Future<void> createChatroom(String commenterId) async{
     String? currId = auth?.email;
     String chatRoom = 'temp';
@@ -280,54 +368,58 @@ class _ArticlePageState extends State<ArticlePage> {
   Widget generateComment(DocumentSnapshot data) {
     ArticleComments articleComments = ArticleComments.fromDs(data);
 
-    return Row(
+    return Column(
       children: [
-        Container(
-          margin: const EdgeInsets.only(right: 10),
-          child: const Icon(
-            Icons.account_circle_rounded,
-            size: 50,
-          ),
-        ),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(articleComments.userId),
-              Container(
-                margin: const EdgeInsets.only(top: 5),
-                child: Text(
-                  articleComments.content,
-                  style: const TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
+        Row(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(right: 10),
+              child: const Icon(
+                Icons.account_circle_rounded,
+                size: 50,
               ),
-            ],
-          ),
-        ),
-        IconButton(
-          icon: const Icon(
-            Icons.more_vert,
-          ),
-          onPressed: () {
-            createChatroom(articleComments.userId);
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(articleComments.userId),
+                  Container(
+                    margin: const EdgeInsets.only(top: 5),
+                    child: Text(
+                      articleComments.content,
+                      style: const TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+              icon: const Icon(
+                Icons.chat_bubble,
+              ),
+              onPressed: () {
+                createChatroom(articleComments.userId);
 
-            String? currId = auth?.email;
-            String chatRoom = 'temp';
-            if (currId != null && articleComments.userId != null)
-              chatRoom = currId+articleComments.userId;
+                String? currId = auth?.email;
+                String chatRoom = 'temp';
+                if (currId != null && articleComments.userId != null)
+                  chatRoom = currId+articleComments.userId;
 
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => const ChatRoomPage(chatRoom)),
-            // );
-          },
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => const ChatRoomPage(chatRoom)),
+                // );
+              },
+            ),
+          ],
         ),
         const Divider(
           color: Colors.black,
           thickness: 2,
-        )
+        ),
       ],
     );
   }
